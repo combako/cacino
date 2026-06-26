@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stars Casino Mini App</title>
+    <script src="https://telegram.org"></script>
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0c20 0%, #15102a 100%);
+            color: #fff;
+            margin: 0;
+            padding: 15px;
+            text-align: center;
+            user-select: none;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffca28;
+            text-shadow: 0 0 10px rgba(255, 202, 40, 0.3);
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .btn {
+            background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-withdraw { background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%); box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4); }
+        .btn-red { background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4); margin-bottom: 10px; }
+        .btn-black { background: linear-gradient(90deg, #333333 0%, #111111 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        
+        /* График краша */
+        #crash-area {
+            height: 160px;
+            background: #090714;
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        #rocket {
+            font-size: 45px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            transition: transform 0.1s linear;
+        }
+        #multiplier {
+            font-size: 36px;
+            font-weight: 900;
+            color: #00e676;
+            margin-top: 60px;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .wheel {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #111;
+            margin: 15px auto;
+            font-size: 35px;
+            line-height: 80px;
+            border: 4px solid #fff;
+            transition: transform 1.5s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>Ваш баланс игрока</div>
+        <div class="balance">💰 <span id="balance-val">150</span> ⭐</div>
+    </div>
+
+    <!-- КРАШ -->
+    <div class="game-card">
+        <h3 style="margin-top:0;">🚀 КРАШ ИГРА (Ставка 10 ⭐)</h3>
+        <div id="crash-area">
+            <div id="multiplier">1.00x</div>
+            <div id="rocket">🚀</div>
+        </div>
+        <button class="btn" id="btn-crash-start" onclick="startCrash()">ВЗЛЕТ РАКЕТЫ</button>
+        <button class="btn btn-withdraw" id="btn-crash-take" onclick="takeCrash()" style="display:none;">ЗАБРАТЬ ВЫИГРЫШ</button>
+    </div>
+
+    <!-- РУЛЕТКА -->
+    <div class="game-card">
+        <h3 style="margin-top:0;">🎰 РУЛЕТКА (Ставка 10 ⭐)</h3>
+        <div class="wheel" id="wheel-anim">❓</div>
+        <div id="roulette-status" style="margin-bottom:10px; font-size:14px; color:#aaa;">Выберите цвет для ставки</div>
+        <button class="btn btn-red" onclick="playRoulette('red')">🔴 НА КРАСНОЕ (x2)</button>
+        <button class="btn btn-black" onclick="playRoulette('black')">⚫ НА ЧЕРНОЕ (x2)</button>
+    </div>
+
+    <!-- РАБОЧИЙ ВЫВОД -->
+    <div class="game-card">
+        <h3 style="margin-top:0;">💎 ВЫВОД СРЕДСТВ</h3>
+        <div style="font-size:13px; color:#aaa; margin-bottom:10px;">Курс: 100 ⭐ = 0.8 TON. Минимум 100 ⭐</div>
+        <input type="text" id="ton-wallet" placeholder="Введите ваш TON адрес (UQ...)">
+        <button class="btn btn-withdraw" onclick="requestWithdraw()">ВЫВЕСТИ ВСЁ В TON</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let balance = 150; 
+        let crashInterval;
+        let currentX = 1.0;
+        let crashLimit = 1.0;
+
+        function updateUI() {
+            document.getElementById('balance-val').innerText = balance;
+        }
+
+        // --- ЛОГИКА КРАША С ЖЕСТКИМИ ШАНСАМИ ---
+        function startCrash() {
+            if (balance < 10) return alert("Недостаточно звезд!");
+            balance -= 10;
+            updateUI();
+
+            document.getElementById('btn-crash-start').style.display = 'none';
+            document.getElementById('btn-crash-take').style.display = 'block';
+            
+            currentX = 1.0;
+            
+            // Математика слива (казино всегда в плюсе)
+            let rand = Math.random();
+            if (rand < 0.10) crashLimit = 1.00; // 10% моментальный взрыв
+            else if (rand < 0.70) crashLimit = (Math.random() * 0.4 + 1.01).toFixed(2); // 60% слив до 1.41x
+            else if (rand < 0.95) crashLimit = (Math.random() * 1.5 + 1.42).toFixed(2); // 25% средний икс
+            else crashLimit = (Math.random() * 4 + 3.0).toFixed(2); // 5% джекпот до 7x
+
+            const rocket = document.getElementById('rocket');
+            rocket.style.transform = 'translate(0px, 0px)';
+
+            crashInterval = setInterval(() => {
+                if (currentX >= crashLimit) {
+                    clearInterval(crashInterval);
+                    document.getElementById('multiplier').innerText = "💥 ВЗРЫВ на " + crashLimit + "x";
+                    document.getElementById('multiplier').style.color = '#ff416c';
+                    endCrash();
+                    return;
+                }
+                currentX += 0.03;
+                document.getElementById('multiplier').innerText = currentX.toFixed(2) + 'x';
+                document.getElementById('multiplier').style.color = '#00e676';
+                
+                // Анимация полета ракеты по экрану
+                let pixels = (currentX - 1) * 35;
+                rocket.style.transform = `translate(${pixels}px, -${pixels/1.5}px)`;
+            }, 100);
+        }
+
+        function takeCrash() {
+            clearInterval(crashInterval);
+            let win = Math.floor(10 * currentX);
+            balance += win;
+            updateUI();
+            alert(`🎉 Успешно забрали ${win} ⭐ на коэффициенте ${currentX.toFixed(2)}x!`);
+            endCrash();
+        }
+
+        function endCrash() {
+            document.getElementById('btn-crash-start').style.display = 'block';
+            document.getElementById('btn-crash-take').style.display = 'none';
+            syncWithBot("crash_update");
+        }
+
+        // --- РУЛЕТКА ---
+        function playRoulette(choice) {
+            if (balance < 10) return alert("Недостаточно звезд!");
+            balance -= 10;
+            updateUI();
+
+            const wheel = document.getElementById('wheel-anim');
+            const status = document.getElementById('roulette-status');
+            status.innerText = "Колесо вращается...";
+            
+            wheel.style.transform = "rotate(1080deg)";
+
+            setTimeout(() => {
+                wheel.style.transform = "rotate(0deg)";
+                let resColor = Math.random() < 0.48 ? 'red' : 'black'; // Упрощенное зеро для теста
+                wheel.innerText = resColor === 'red' ? "🔴" : "⚫";
+
+                if (choice === resColor) {
+                    balance += 20;
+                    status.innerText = "🎉 Победили! +20 звезд на счет!";
+                } else {
+                    status.innerText = "😢 Проиграли. Ставка сгорела.";
+                }
+                updateUI();
+                syncWithBot("roulette_update");
+            }, 1500);
+        }
+
+        // --- РАБОЧАЯ КНОПКА ВЫВОДА ---
+        function requestWithdraw() {
+            const wallet = document.getElementById('ton-wallet').value.trim();
+            if (!wallet) return alert("Введите ваш TON кошелек!");
+            if (balance < 100) return alert("Минимальный вывод — 100 звезд!");
+
+            // Отправляем данные напрямую в чат бота через Telegram API
+            tg.sendData(JSON.stringify({
+                action: "withdraw",
+                stars: balance,
+                ton_wallet: wallet
+            }));
+            
+            balance = 0;
+            updateUI();
+            tg.close(); // Закрываем мини-апп после успешной отправки заявки
+        }
+
+        function syncWithBot(type) {
+            // Для фоновой синхронизации без закрытия окна (опционально)
+        }
+    </script>
+</body>
+</html>
