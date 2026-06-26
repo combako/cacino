@@ -19,14 +19,11 @@
         button { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
         .btn-bet { background: var(--accent); color: #022312; }
         .btn-cashout { background: #ffeb3b; color: #332b00; display: none; }
-        .finance-buttons { display: flex; gap: 12px; width: 100%; }
-        .btn-dep { background: #2196f3; color: white; }
-        .btn-withdraw { background: #b388ff; color: white; }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="balance-box"><div>Игровой баланс</div><span id="user-balance">0</span> ⭐️</div>
+        <div class="balance-box"><div>Твой игровой баланс</div><span id="user-balance">0</span> ⭐️</div>
         <div style="text-align: right;"><div>Игрок</div><span id="username">TG Guest</span></div>
     </div>
     <div class="game-area">
@@ -39,10 +36,7 @@
         <button class="btn-bet" id="btn-action" onclick="makeBet()">Поставить</button>
         <button class="btn-cashout" id="btn-cashout" onclick="cashOut()">Забрать</button>
     </div>
-    <div class="finance-buttons">
-        <button class="btn-dep" onclick="openDeposit()">📥 Пополнить (от 10 ⭐️)</button>
-        <button class="btn-withdraw" onclick="openWithdraw()">📤 Вывод на кошелек</button>
-    </div>
+
     <script>
         const tg = window.Telegram?.WebApp;
         const BACKEND_URL = "http://127.0.0.1:8000"; 
@@ -55,7 +49,7 @@
                 if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                     userId = tg.initDataUnsafe.user.id;
                     document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
-                    statusEl.innerText = "Пополните баланс и играйте!";
+                    statusEl.innerText = "Сделайте ставку для запуска ракеты!";
                     loadBalance();
                 } else { statusEl.innerText = "⚠️ Ошибка: запустите игру строго через бота в Telegram!"; }
             } else { statusEl.innerText = "⚠️ Ошибка: Telegram SDK не найден!"; }
@@ -70,43 +64,12 @@
             } catch(e) { console.log("Бэкенд на ПК еще не запущен"); }
         }
 
-        async function openDeposit() {
-            if (!userId) { alert("Ошибка! Запустите игру внутри Telegram!"); return; }
-            statusEl.innerText = "Создаем счет...";
-            try {
-                let res = await fetch(`${BACKEND_URL}/create_invoice?user_id=${userId}`);
-                let data = await res.json();
-                if(data.success) {
-                    tg.openInvoice(data.invoice_url, function(status) {
-                        if (status === 'paid') { alert("🎉 Оплата успешна! Обновляем баланс..."); setTimeout(loadBalance, 2000); } 
-                        else { alert("Оплата отменена."); statusEl.innerText = "Отменено."; }
-                    });
-                }
-            } catch(e) { alert("Нет связи с сервером Python! Убедитесь, что bot.py запущен на компьютере."); }
-        }
-
-        async function openWithdraw() {
-            if (!userId) { alert("Ошибка! Запустите игру внутри Telegram!"); return; }
-            if (balance <= 0) { alert("Ваш баланс равен 0!"); return; }
-            const wallet = prompt(`Вывод ${balance} ⭐️. Введите ваш TON кошелек:`);
-            if (!wallet || wallet.trim().length < 10) { alert("Неверный адрес кошелька!"); return; }
-            try {
-                let res = await fetch(`${BACKEND_URL}/with_draw`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ user_id: userId, wallet: wallet.trim() })
-                });
-                let data = await res.json();
-                if(data.success) { alert("✅ Заявка создана!"); loadBalance(); }
-            } catch(e) { alert("Ошибка отправки заявки."); }
-        }
-
         function updateUI() { balanceEl.innerText = balance; }
 
         async function makeBet() {
             if (!userId) { alert("Ошибка! Запустите игру внутри Telegram!"); return; }
             currentBet = parseInt(betInput.value);
-            if (isNaN(currentBet) || currentBet <= 0 || currentBet > balance) { alert("Проверьте сумму ставки!"); return; }
+            if (isNaN(currentBet) || currentBet <= 0 || currentBet > balance) { alert("Ошибка! Недостаточно звезд на балансе. Закройте игру и пополните счет через кнопки бота!"); return; }
             try {
                 let res = await fetch(`${BACKEND_URL}/play_crash`, {
                     method: 'POST',
