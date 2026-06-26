@@ -6,7 +6,7 @@
     <title>Serverless TON Crash</title>
     <!-- Официальные скрипты Telegram WebApp и TON Connect -->
     <script src="https://telegram.org"></script>
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <script src="https://unpkg.com"></script>
     <style>
         :root { --bg: #0d0e15; --panel: #141622; --accent: #00e676; --danger: #ff1744; --text: #ffffff; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; user-select: none; }
@@ -55,16 +55,24 @@
     </div>
 
     <script>
-        // Кошелек для сбора депозитов
+        // Ваш кошелек администратора для сбора депозитов
         const ADMIN_WALLET = "UQDeuB6zdSFv2e6tBk6INoLN7S28qXwQLrIrSDFX4BVomEj4"; 
 
         // Инициализация Telegram WebApp API
         const tg = window.Telegram?.WebApp;
         if (tg) { tg.ready(); tg.expand(); if (tg.initDataUnsafe?.user) { document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name; } }
 
-        // Инициализация TON Connect
+        // Встроенный манифест в формате Data URL, чтобы избежать сетевых ошибок 404
+        const manifestData = {
+            url: window.location.href,
+            name: "TON Crash Rocket Game",
+            iconUrl: "https://ton.org"
+        };
+        const manifestUrl = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(manifestData));
+
+        // Инициализация TON Connect с автономным манифестом
         const tonConnectUI = new TONConnectUI.TonConnectUI({
-            manifestUrl: 'https://github.io', 
+            manifestUrl: manifestUrl, 
             buttonRootId: 'ton-connect-btn'
         });
 
@@ -74,7 +82,7 @@
         // Обработка депозита
         async function openDeposit() {
             if (!tonConnectUI.connected) {
-                alert("❌ Сначала обязательно подключите кошелек кнопкой «Connect Wallet» в самом верху!");
+                alert("❌ Сначала обязательно подключите кошелек кнопкой «Connect Wallet» в самом верху страницы!");
                 return;
             }
 
@@ -131,7 +139,7 @@
         function makeBet() {
             currentBet = parseFloat(betInput.value);
             if (isNaN(currentBet) || currentBet <= 0 || currentBet > balance) { 
-                alert("Ошибка! Ставка превышает баланс или введена неверно. Пополните баланс кнопкой ниже."); 
+                alert("Ошибка! Ставка превышает баланс или введена неверно. Нажмите 'Пополнить', чтобы добавить TON на баланс."); 
                 return; 
             }
             balance -= currentBet; updateUI();
