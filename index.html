@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Stars Casino</title>
+    <title>Cyber Stars & TON Casino</title>
     <script src="https://telegram.org"></script>
     <style>
         :root {
-            --bg-color: #080710;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --neon-blue: #00f0ff;
+            --bg-main: #06050c;
+            --panel-bg: rgba(255, 255, 255, 0.03);
+            --panel-border: rgba(255, 255, 255, 0.07);
+            --neon-cyan: #00f0ff;
             --neon-green: #00ff66;
-            --neon-pink: #ff007f;
-            --text-main: #ffffff;
-            --text-secondary: #8a8a9d;
+            --neon-pink: #ff0055;
+            --gold: #ffca28;
+            --ton-blue: #0098ea;
         }
 
         body {
-            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-color);
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-main);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.06) 0%, transparent 40%);
-            color: var(--text-main);
+                radial-gradient(circle at 10% 10%, rgba(0, 240, 255, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(255, 0, 85, 0.06) 0%, transparent 40%);
+            color: #fff;
             margin: 0;
             padding: 16px;
             text-align: center;
@@ -31,281 +31,228 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Эффект стекла для карточек */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--panel-border);
             border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: all 0.3s ease;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        .glass-panel:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.05);
-        }
-
-        /* Верхняя панель баланса */
-        .header-balance {
+        /* ПЕРЕКЛЮЧАТЕЛЬ ВАЛЮТЫ */
+        .currency-selector {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .balance-title {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
+        .currency-tab {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #8a8a9d;
         }
 
-        .balance-value {
-            font-size: 34px;
+        .currency-tab.active[data-curr="stars"] { color: #fff; background: var(--gold); box-shadow: 0 0 15px rgba(255,202,40,0.3); }
+        .currency-tab.active[data-curr="ton"] { color: #fff; background: var(--ton-blue); box-shadow: 0 0 15px rgba(0,152,234,0.3); }
+
+        .balance-display {
+            font-size: 36px;
             font-weight: 800;
-            color: #ffca28;
-            text-shadow: 0 0 20px rgba(255, 202, 40, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
         }
 
         h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
+            font-size: 16px;
+            margin: 0 0 14px 0;
             text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #8a8a9d;
         }
 
-        /* График Краша */
+        /* КРАШ ЗОНА */
         #crash-area {
-            height: 180px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 18px;
+            height: 160px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.02);
         }
 
         #rocket {
-            font-size: 50px;
+            font-size: 45px;
             position: absolute;
             bottom: 15px;
             left: 15px;
-            filter: drop-shadow(0 0 15px var(--neon-blue));
-            transform-origin: center;
+            filter: drop-shadow(0 0 10px var(--neon-cyan));
         }
 
         #multiplier {
-            font-size: 42px;
+            font-size: 44px;
             font-weight: 900;
+            line-height: 160px;
             color: var(--neon-green);
-            text-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
-            font-variant-numeric: tabular-nums;
-            z-index: 2;
-            transition: color 0.2s;
+            text-shadow: 0 0 20px rgba(0,255,102,0.3);
         }
 
-        /* Рулетка */
-        .wheel-container {
-            position: relative;
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 18px auto;
-        }
-
+        /* РУЛЕТКА */
         .wheel {
-            width: 100%;
-            height: 100%;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.02);
-            font-size: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px dashed rgba(255,255,255,0.2);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
+            font-size: 36px;
+            line-height: 70px;
+            margin: 0 auto 14px auto;
+            border: 2px dashed rgba(255,255,255,0.2);
             transition: transform 1.5s cubic-bezier(0.1, 0.8, 0.3, 1);
         }
 
-        .wheel.spinning {
-            border-color: var(--neon-blue);
-            animation: pulse-border 1.5s infinite;
-        }
-
-        #roulette-status {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        /* Поля ввода */
+        /* ИНПУТЫ И КНОПКИ */
         input {
             width: 100%;
             box-sizing: border-box;
-            padding: 16px;
+            padding: 14px;
             background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--panel-border);
             border-radius: 14px;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             text-align: center;
             outline: none;
-            transition: all 0.3s;
-            margin-bottom: 16px;
-        }
-
-        input:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-        }
-
-        /* Премиум Кнопки */
-        .btn {
-            position: relative;
-            background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
-            color: #fff;
-            border: none;
-            padding: 16px 20px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 16px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            letter-spacing: 0.5px;
-            overflow: hidden;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-            opacity: 0.9;
-        }
-
-        .btn-take {
-            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
-            box-shadow: 0 6px 20px rgba(0, 176, 155, 0.3);
-        }
-
-        .btn-red {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.25);
             margin-bottom: 12px;
         }
+        input:focus { border-color: var(--neon-cyan); }
 
-        .btn-black {
-            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        .btn {
+            background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
+            color: white; border: none; padding: 16px; font-size: 15px; font-weight: 700;
+            border-radius: 14px; cursor: pointer; width: 100%; margin-bottom: 10px;
+            transition: 0.2s;
         }
+        .btn:active { transform: scale(0.98); }
+        .btn-red { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
+        .btn-black { background: linear-gradient(135deg, #2c3e50 0%, #111111 100%); }
+        .btn-withdraw { background: linear-gradient(135deg, #8a2387 0%, #e94057 50%, #f27121 100%); }
+        .btn-buy { background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); font-size: 13px; padding: 12px; }
+        .btn-buy:hover { background: rgba(255,255,255,0.1); }
 
-        .btn-withdraw {
-            background: linear-gradient(135deg, #8a2387 0%, #e94057 50%, #f27121 100%);
-            box-shadow: 0 6px 20px rgba(233, 64, 87, 0.3);
-        }
-
-        .flex-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 240, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+        .shop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- БАЛАНС -->
-    <div class="glass-panel header-balance">
-        <span class="balance-title">Ваш игровой баланс</span>
-        <span class="balance-value">💰 <span id="balance-val">0</span> ⭐</span>
+    <!-- СЕЛЕКТОР И БАЛАНСЫ -->
+    <div class="panel">
+        <div class="currency-selector">
+            <div class="currency-tab active" data-curr="stars" onclick="switchCurrency('stars')">⭐ ЗВЕЗДЫ</div>
+            <div class="currency-tab" data-curr="ton" onclick="switchCurrency('ton')">💎 TON</div>
+        </div>
+        <div style="font-size:12px; color:#8a8a9d;">ТЕКУЩИЙ БАЛАНС</div>
+        <div class="balance-display" id="balance-txt">0.00 ⭐</div>
     </div>
 
-    <!-- ИГРА КРАШ -->
-    <div class="glass-panel">
-        <h3>🚀 КРАШ ИГРА <span style="font-size:12px; color:var(--text-secondary); font-weight:400; margin-left:auto;">Ставка: 10 ⭐</span></h3>
+    <!-- КРАШ -->
+    <div class="panel">
+        <h3>🚀 КРАШ ИГРА <span id="crash-bet-txt" style="font-size:12px; float:right; color:#8a8a9d;">Ставка: 10 ⭐</span></h3>
         <div id="crash-area">
-            <div id="multiplier">1.00x</div>
             <div id="rocket">🚀</div>
+            <div id="multiplier">1.00x</div>
         </div>
-        <button class="btn" id="btn-crash-start" onclick="startCrash()">ВЗЛЕТ РАКЕТЫ</button>
-        <button class="btn btn-take" id="btn-crash-take" onclick="takeCrash()" style="display:none;">ЗАБРАТЬ ВЫИГРЫШ</button>
+        <button class="btn" id="btn-start" onclick="startCrash()">ВЗЛЕТ РАКЕТЫ</button>
+        <button class="btn" id="btn-take" onclick="takeCrash()" style="display:none; background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);">ЗАБРАТЬ</button>
     </div>
 
     <!-- РУЛЕТКА -->
-    <div class="glass-panel">
-        <h3>🎰 ЖИВАЯ РУЛЕТКА <span style="font-size:12px; color:var(--text-secondary); font-weight:400; margin-left:auto;">Ставка: 10 ⭐</span></h3>
-        <div class="wheel-container">
-            <div class="wheel" id="wheel-anim">❓</div>
-        </div>
-        <div id="roulette-status">Выберите цвет фишек для начала раунда</div>
-        <div class="flex-buttons">
-            <button class="btn btn-red" onclick="playRoulette('red')">🔴 НА Красное (x2)</button>
-            <button class="btn btn-black" onclick="playRoulette('black')">⚫ НА Черное (x2)</button>
+    <div class="panel">
+        <h3>🎰 РУЛЕТКА <span id="roulette-bet-txt" style="font-size:12px; float:right; color:#8a8a9d;">Ставка: 10 ⭐</span></h3>
+        <div class="wheel" id="wheel-box">❓</div>
+        <div id="roulette-status" style="font-size:13px; color:#8a8a9d; margin-bottom:12px;">Выберите цвет для ставки:</div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-red" onclick="playRoulette('red')" style="margin:0;">КРАСНОЕ</button>
+            <button class="btn btn-black" onclick="playRoulette('black')" style="margin:0;">ЧЕРНОЕ</button>
         </div>
     </div>
 
-    <!-- СТИЛЬНЫЙ ВЫВОД -->
-    <div class="glass-panel">
-        <h3>💎 ВЫВОД СРЕДСТВ</h3>
-        <div style="font-size:12px; color:var(--text-secondary); text-align:left; margin-bottom:14px; line-height:1.4;">
-            Курс обмена: <b style="color:#ffca28;">100 ⭐ = 0.8 TON</b>.<br>Минимальный лимит на снятие: 100 ⭐
+    <!-- МАГАЗИН (КУПИТЬ В БОТЕ) -->
+    <div class="panel">
+        <h3>🛒 МАГАЗИН КАЗИНО (ПОПОЛНЕНИЕ)</h3>
+        <div style="font-size:12px; color:#8a8a9d; text-align:left; margin-bottom:12px;">Нажмите кнопку, приложение закроется, и бот выставит счет на оплату:</div>
+        <div class="shop-grid">
+            <button class="btn btn-buy" onclick="buyAsset('stars_50')">➕ 50 Звезд (⭐)</button>
+            <button class="btn btn-buy" onclick="buyAsset('stars_100')">➕ 100 Звезд (⭐)</button>
+            <button class="btn btn-buy" onclick="buyAsset('ton_1')">➕ 1 TON (💎)</button>
+            <button class="btn btn-buy" onclick="buyAsset('ton_5')">➕ 5 TON (💎)</button>
         </div>
-        <input type="text" id="ton-wallet" placeholder="Адрес кошелька TON (UQ...)">
-        <button class="btn btn-withdraw" onclick="requestWithdraw()">ВЫВЕСТИ В TON</button>
+    </div>
+
+    <!-- ВЫВОД СРЕДСТВ -->
+    <div class="panel">
+        <h3>💎 МГНОВЕННЫЙ ВЫВОД</h3>
+        <div style="font-size:12px; color:#8a8a9d; text-align:left; margin-bottom:12px; line-height:1.4;">
+            Минимум вывода: <b style="color:#ffca28;">100 ⭐</b> или <b style="color:#0098ea;">0.8 TON</b>.<br>
+            Курс конвертации при выводе звезд: 100 ⭐ = 0.8 TON.
+        </div>
+        <input type="text" id="wallet-input" placeholder="Ваш адрес TON кошелька (UQ...)">
+        <button class="btn btn-withdraw" onclick="sendWithdraw()">ВЫВЕСТИ ВСЁ</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        let balance = 0; 
-        
-        try {
-            tg.expand();
-            tg.ready();
-        } catch(e) {}
+        tg.expand(); tg.ready();
 
-        function updateUI() {
-            document.getElementById('balance-val').innerText = balance;
-        }
-
-        if (balance === 0) {
-            balance = 150; // Баланс для теста графики
-            updateUI();
-        }
-
-        let crashInterval;
+        // Тестовые балансы
+        let balances = { stars: 150, ton: 2.5 };
+        let activeCurrency = 'stars';
+        let crashInterval = null;
         let currentX = 1.0;
         let crashLimit = 1.0;
 
+        function updateUI() {
+            let symbol = activeCurrency === 'stars' ? '⭐' : 'TON';
+            let val = activeCurrency === 'stars' ? balances.stars : balances.ton.toFixed(2);
+            document.getElementById('balance-txt').innerText = `${val} ${symbol}`;
+            document.getElementById('crash-bet-txt').innerText = `Ставка: ${activeCurrency === 'stars' ? '10 ⭐' : '0.10 TON'}`;
+            document.getElementById('roulette-bet-txt').innerText = `Ставка: ${activeCurrency === 'stars' ? '10 ⭐' : '0.10 TON'}`;
+        }
+        updateUI();
+
+        function switchCurrency(curr) {
+            activeCurrency = curr;
+            document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.currency-tab[data-curr="${curr}"]`).classList.add('active');
+            updateUI();
+        }
+
+        // --- КРАШ ---
         function startCrash() {
-            if (balance < 10) return alert("Недостаточно звезд!");
-            balance -= 10;
+            let cost = activeCurrency === 'stars' ? 10 : 0.10;
+            if (balances[activeCurrency] < cost) return alert("Недостаточно средств!");
+            
+            balances[activeCurrency] -= cost;
             updateUI();
 
-            document.getElementById('btn-crash-start').style.display = 'none';
-            document.getElementById('btn-crash-take').style.display = 'block';
-            
+            document.getElementById('btn-start').style.display = 'none';
+            document.getElementById('btn-take').style.display = 'block';
+
             currentX = 1.0;
-            
-            let rand = Math.random();
-            if (rand < 0.08) crashLimit = 1.00; 
-            else if (rand < 0.65) crashLimit = (Math.random() * 0.4 + 1.01).toFixed(2); 
+            let r = Math.random();
+            if (r < 0.10) crashLimit = 1.00;
