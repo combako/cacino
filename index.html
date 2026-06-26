@@ -3,153 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stars Casino Mini App</title>
+    <title>Premium Stars Casino</title>
     <script src="https://telegram.org"></script>
     <style>
+        :root {
+            --bg-color: #080710;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --neon-blue: #00f0ff;
+            --neon-green: #00ff66;
+            --neon-pink: #ff007f;
+            --text-main: #ffffff;
+            --text-secondary: #8a8a9d;
+        }
+
         body {
-            font-family: 'SF Pro Display', -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0f0c20 0%, #15102a 100%);
-            color: #fff;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.06) 0%, transparent 40%);
+            color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 16px;
             text-align: center;
             user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
-        .header {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 15px;
+
+        /* Эффект стекла для карточек */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s ease;
         }
-        .balance {
-            font-size: 24px;
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.05);
+        }
+
+        /* Верхняя панель баланса */
+        .header-balance {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .balance-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .balance-value {
+            font-size: 34px;
             font-weight: 800;
             color: #ffca28;
-            text-shadow: 0 0 10px rgba(255, 202, 40, 0.3);
+            text-shadow: 0 0 20px rgba(255, 202, 40, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .game-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .btn {
-            background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 16px;
+
+        h3 {
+            font-size: 18px;
             font-weight: 700;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
-            transition: 0.2s;
+            margin-top: 0;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-withdraw { background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%); box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4); }
-        .btn-red { background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4); margin-bottom: 10px; }
-        .btn-black { background: linear-gradient(90deg, #333333 0%, #111111 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-        
-        /* График краша */
+
+        /* График Краша */
         #crash-area {
-            height: 160px;
-            background: #090714;
-            border-radius: 14px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 18px;
             position: relative;
             overflow: hidden;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
+
         #rocket {
-            font-size: 45px;
+            font-size: 50px;
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-            transition: transform 0.1s linear;
+            bottom: 15px;
+            left: 15px;
+            filter: drop-shadow(0 0 15px var(--neon-blue));
+            transform-origin: center;
         }
+
         #multiplier {
-            font-size: 36px;
+            font-size: 42px;
             font-weight: 900;
-            color: #00e676;
-            margin-top: 60px;
+            color: var(--neon-green);
+            text-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
+            font-variant-numeric: tabular-nums;
+            z-index: 2;
+            transition: color 0.2s;
         }
-        input {
-            width: 90%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: white;
+
+        /* Рулетка */
+        .wheel-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 18px auto;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.02);
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px dashed rgba(255,255,255,0.2);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: transform 1.5s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        .wheel.spinning {
+            border-color: var(--neon-blue);
+            animation: pulse-border 1.5s infinite;
+        }
+
+        #roulette-status {
             font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* Поля ввода */
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
             text-align: center;
+            outline: none;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+
+        input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        /* Премиум Кнопки */
+        .btn {
+            position: relative;
+            background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
+            color: #fff;
+            border: none;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+            overflow: hidden;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        .btn-take {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            box-shadow: 0 6px 20px rgba(0, 176, 155, 0.3);
+        }
+
+        .btn-red {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.25);
             margin-bottom: 12px;
         }
-        .wheel {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #111;
-            margin: 15px auto;
-            font-size: 35px;
-            line-height: 80px;
-            border: 4px solid #fff;
-            transition: transform 1.5s cubic-bezier(0.1, 0.8, 0.3, 1);
+
+        .btn-black {
+            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-withdraw {
+            background: linear-gradient(135deg, #8a2387 0%, #e94057 50%, #f27121 100%);
+            box-shadow: 0 6px 20px rgba(233, 64, 87, 0.3);
+        }
+
+        .flex-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 240, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div>Ваш баланс игрока</div>
-        <div class="balance">💰 <span id="balance-val">150</span> ⭐</div>
+    <!-- БАЛАНС -->
+    <div class="glass-panel header-balance">
+        <span class="balance-title">Ваш игровой баланс</span>
+        <span class="balance-value">💰 <span id="balance-val">0</span> ⭐</span>
     </div>
 
-    <!-- КРАШ -->
-    <div class="game-card">
-        <h3 style="margin-top:0;">🚀 КРАШ ИГРА (Ставка 10 ⭐)</h3>
+    <!-- ИГРА КРАШ -->
+    <div class="glass-panel">
+        <h3>🚀 КРАШ ИГРА <span style="font-size:12px; color:var(--text-secondary); font-weight:400; margin-left:auto;">Ставка: 10 ⭐</span></h3>
         <div id="crash-area">
             <div id="multiplier">1.00x</div>
             <div id="rocket">🚀</div>
         </div>
         <button class="btn" id="btn-crash-start" onclick="startCrash()">ВЗЛЕТ РАКЕТЫ</button>
-        <button class="btn btn-withdraw" id="btn-crash-take" onclick="takeCrash()" style="display:none;">ЗАБРАТЬ ВЫИГРЫШ</button>
+        <button class="btn btn-take" id="btn-crash-take" onclick="takeCrash()" style="display:none;">ЗАБРАТЬ ВЫИГРЫШ</button>
     </div>
 
     <!-- РУЛЕТКА -->
-    <div class="game-card">
-        <h3 style="margin-top:0;">🎰 РУЛЕТКА (Ставка 10 ⭐)</h3>
-        <div class="wheel" id="wheel-anim">❓</div>
-        <div id="roulette-status" style="margin-bottom:10px; font-size:14px; color:#aaa;">Выберите цвет для ставки</div>
-        <button class="btn btn-red" onclick="playRoulette('red')">🔴 НА КРАСНОЕ (x2)</button>
-        <button class="btn btn-black" onclick="playRoulette('black')">⚫ НА ЧЕРНОЕ (x2)</button>
+    <div class="glass-panel">
+        <h3>🎰 ЖИВАЯ РУЛЕТКА <span style="font-size:12px; color:var(--text-secondary); font-weight:400; margin-left:auto;">Ставка: 10 ⭐</span></h3>
+        <div class="wheel-container">
+            <div class="wheel" id="wheel-anim">❓</div>
+        </div>
+        <div id="roulette-status">Выберите цвет фишек для начала раунда</div>
+        <div class="flex-buttons">
+            <button class="btn btn-red" onclick="playRoulette('red')">🔴 НА Красное (x2)</button>
+            <button class="btn btn-black" onclick="playRoulette('black')">⚫ НА Черное (x2)</button>
+        </div>
     </div>
 
-    <!-- РАБОЧИЙ ВЫВОД -->
-    <div class="game-card">
-        <h3 style="margin-top:0;">💎 ВЫВОД СРЕДСТВ</h3>
-        <div style="font-size:13px; color:#aaa; margin-bottom:10px;">Курс: 100 ⭐ = 0.8 TON. Минимум 100 ⭐</div>
-        <input type="text" id="ton-wallet" placeholder="Введите ваш TON адрес (UQ...)">
-        <button class="btn btn-withdraw" onclick="requestWithdraw()">ВЫВЕСТИ ВСЁ В TON</button>
+    <!-- СТИЛЬНЫЙ ВЫВОД -->
+    <div class="glass-panel">
+        <h3>💎 ВЫВОД СРЕДСТВ</h3>
+        <div style="font-size:12px; color:var(--text-secondary); text-align:left; margin-bottom:14px; line-height:1.4;">
+            Курс обмена: <b style="color:#ffca28;">100 ⭐ = 0.8 TON</b>.<br>Минимальный лимит на снятие: 100 ⭐
+        </div>
+        <input type="text" id="ton-wallet" placeholder="Адрес кошелька TON (UQ...)">
+        <button class="btn btn-withdraw" onclick="requestWithdraw()">ВЫВЕСТИ В TON</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        let balance = 150; 
-        let crashInterval;
-        let currentX = 1.0;
-        let crashLimit = 1.0;
+        let balance = 0; 
+        
+        try {
+            tg.expand();
+            tg.ready();
+        } catch(e) {}
 
         function updateUI() {
             document.getElementById('balance-val').innerText = balance;
         }
 
-        // --- ЛОГИКА КРАША С ЖЕСТКИМИ ШАНСАМИ ---
+        if (balance === 0) {
+            balance = 150; // Баланс для теста графики
+            updateUI();
+        }
+
+        let crashInterval;
+        let currentX = 1.0;
+        let crashLimit = 1.0;
+
         function startCrash() {
             if (balance < 10) return alert("Недостаточно звезд!");
             balance -= 10;
@@ -160,98 +306,6 @@
             
             currentX = 1.0;
             
-            // Математика слива (казино всегда в плюсе)
             let rand = Math.random();
-            if (rand < 0.10) crashLimit = 1.00; // 10% моментальный взрыв
-            else if (rand < 0.70) crashLimit = (Math.random() * 0.4 + 1.01).toFixed(2); // 60% слив до 1.41x
-            else if (rand < 0.95) crashLimit = (Math.random() * 1.5 + 1.42).toFixed(2); // 25% средний икс
-            else crashLimit = (Math.random() * 4 + 3.0).toFixed(2); // 5% джекпот до 7x
-
-            const rocket = document.getElementById('rocket');
-            rocket.style.transform = 'translate(0px, 0px)';
-
-            crashInterval = setInterval(() => {
-                if (currentX >= crashLimit) {
-                    clearInterval(crashInterval);
-                    document.getElementById('multiplier').innerText = "💥 ВЗРЫВ на " + crashLimit + "x";
-                    document.getElementById('multiplier').style.color = '#ff416c';
-                    endCrash();
-                    return;
-                }
-                currentX += 0.03;
-                document.getElementById('multiplier').innerText = currentX.toFixed(2) + 'x';
-                document.getElementById('multiplier').style.color = '#00e676';
-                
-                // Анимация полета ракеты по экрану
-                let pixels = (currentX - 1) * 35;
-                rocket.style.transform = `translate(${pixels}px, -${pixels/1.5}px)`;
-            }, 100);
-        }
-
-        function takeCrash() {
-            clearInterval(crashInterval);
-            let win = Math.floor(10 * currentX);
-            balance += win;
-            updateUI();
-            alert(`🎉 Успешно забрали ${win} ⭐ на коэффициенте ${currentX.toFixed(2)}x!`);
-            endCrash();
-        }
-
-        function endCrash() {
-            document.getElementById('btn-crash-start').style.display = 'block';
-            document.getElementById('btn-crash-take').style.display = 'none';
-            syncWithBot("crash_update");
-        }
-
-        // --- РУЛЕТКА ---
-        function playRoulette(choice) {
-            if (balance < 10) return alert("Недостаточно звезд!");
-            balance -= 10;
-            updateUI();
-
-            const wheel = document.getElementById('wheel-anim');
-            const status = document.getElementById('roulette-status');
-            status.innerText = "Колесо вращается...";
-            
-            wheel.style.transform = "rotate(1080deg)";
-
-            setTimeout(() => {
-                wheel.style.transform = "rotate(0deg)";
-                let resColor = Math.random() < 0.48 ? 'red' : 'black'; // Упрощенное зеро для теста
-                wheel.innerText = resColor === 'red' ? "🔴" : "⚫";
-
-                if (choice === resColor) {
-                    balance += 20;
-                    status.innerText = "🎉 Победили! +20 звезд на счет!";
-                } else {
-                    status.innerText = "😢 Проиграли. Ставка сгорела.";
-                }
-                updateUI();
-                syncWithBot("roulette_update");
-            }, 1500);
-        }
-
-        // --- РАБОЧАЯ КНОПКА ВЫВОДА ---
-        function requestWithdraw() {
-            const wallet = document.getElementById('ton-wallet').value.trim();
-            if (!wallet) return alert("Введите ваш TON кошелек!");
-            if (balance < 100) return alert("Минимальный вывод — 100 звезд!");
-
-            // Отправляем данные напрямую в чат бота через Telegram API
-            tg.sendData(JSON.stringify({
-                action: "withdraw",
-                stars: balance,
-                ton_wallet: wallet
-            }));
-            
-            balance = 0;
-            updateUI();
-            tg.close(); // Закрываем мини-апп после успешной отправки заявки
-        }
-
-        function syncWithBot(type) {
-            // Для фоновой синхронизации без закрытия окна (опционально)
-        }
-    </script>
-</body>
-</html>
+            if (rand < 0.08) crashLimit = 1.00; 
+            else if (rand < 0.65) crashLimit = (Math.random() * 0.4 + 1.01).toFixed(2); 
