@@ -46,7 +46,7 @@
 
     <script>
         const tg = window.Telegram?.WebApp;
-        const BACKEND_URL = "http://localhost:8000"; // Если запускаешь на ПК. На сервере замени на домен.
+        const BACKEND_URL = "http://127.0.0.1:8000"; 
         let userId = 0;
 
         if (tg) {
@@ -60,7 +60,6 @@
         let balance = 0, currentBet = 0, multiplier = 1.00, gameInterval = null, isPlaying = false, hasCashedOut = false, crashPoint = 0.00;
         const balanceEl = document.getElementById('user-balance'), multEl = document.getElementById('multiplier-text'), rocketEl = document.getElementById('rocket'), statusEl = document.getElementById('game-status'), btnAction = document.getElementById('btn-action'), btnCashout = document.getElementById('btn-cashout'), betInput = document.getElementById('bet-amount');
 
-        // Синхронизация баланса с сервером при старте
         async function loadBalance() {
             if (!userId) return;
             try {
@@ -70,46 +69,41 @@
             } catch(e) { console.log("Ошибка загрузки баланса"); }
         }
 
-        // Пополнение (Вызов Invoice через бэкенд бота)
         async function openDeposit() {
-            if (!tg || !userId) { alert("Игра должна быть запущена внутри Telegram!"); return; }
-            statusEl.innerText = "Создаем счет на оплату...";
+            if (!tg || !userId) { alert("Запустите игру внутри Telegram!"); return; }
+            statusEl.innerText = "Создаем счет...";
             try {
                 let res = await fetch(`${BACKEND_URL}/create_invoice?user_id=${userId}`);
                 let data = await res.json();
                 if(data.success) {
                     tg.openInvoice(data.invoice_url, function(status) {
-                        if (status === 'paid') { alert("🎉 Оплата успешна! Баланс обновится через пару секунд."); setTimeout(loadBalance, 3000); } 
-                        else { alert("Оплата отменена или произошла ошибка."); statusEl.innerText = "Оплата отменена."; }
+                        if (status === 'paid') { alert("🎉 Оплата успешна! Обновляем баланс..."); setTimeout(loadBalance, 2000); } 
+                        else { alert("Оплата отменена."); statusEl.innerText = "Отменено."; }
                     });
                 }
-            } catch(e) { alert("Не удалось связаться с Python-сервером бота!"); }
+            } catch(e) { alert("Нет связи с сервером Python!"); }
         }
 
-        // Вывод средств (Списание)
         async function openWithdraw() {
             if (balance <= 0) { alert("Ваш баланс равен 0!"); return; }
-            const wallet = prompt(`Вывод ${balance} ⭐️. Введите ваш TON кошелек для получения выплаты (Звезды будут конвертированы):`);
+            const wallet = prompt(`Вывод ${balance} ⭐️. Введите ваш TON кошелек:`);
             if (!wallet || wallet.trim().length < 10) { alert("Неверный адрес кошелька!"); return; }
             try {
-                let res = await fetch(`${BACKEND_URL}/withdraw`, {
+                let res = await fetch(`${BACKEND_URL}/with_draw`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ user_id: userId, wallet: wallet.trim() })
                 });
                 let data = await res.json();
-                if(data.success) { alert("✅ Заявка на вывод создана! Баланс обнулен."); loadBalance(); }
-            } catch(e) { alert("Ошибка при отправке заявки."); }
+                if(data.success) { alert("✅ Заявка создана!"); loadBalance(); }
+            } catch(e) { alert("Ошибка отправки заявки."); }
         }
 
         function updateUI() { balanceEl.innerText = balance; }
 
-        // Логика игры Краш
         async function makeBet() {
             currentBet = parseInt(betInput.value);
-            if (isNaN(currentBet) || currentBet <= 0 || currentBet > balance) { alert("Проверьте сумму ставки или пополните баланс!"); return; }
-            
-            // Запрашиваем точку краша у сервера, чтобы игрок не мог её подделать
+            if (isNaN(currentBet) || currentBet <= 0 || currentBet > balance) { alert("Проверьте сумму ставки!"); return; }
             try {
                 let res = await fetch(`${BACKEND_URL}/play_crash`, {
                     method: 'POST',
@@ -120,7 +114,7 @@
                 if(!data.success) { alert(data.error); return; }
                 crashPoint = data.crash_point;
                 balance = data.new_balance; updateUI();
-            } catch(e) { alert("Ошибка сервера игры!"); return; }
+            } catch(e) { alert("Ошибка сервера!"); return; }
 
             isPlaying = true; hasCashedOut = false; betInput.disabled = true;
             btnAction.style.display = 'none'; btnCashout.style.display = 'block';
