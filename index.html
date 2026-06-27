@@ -21,14 +21,14 @@
             text-transform: uppercase;
             color: #00ffcc;
             text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         .slot-machine {
             background: linear-gradient(145deg, #2a0845, #6441a5);
             border: 4px solid #ff007f;
             box-shadow: 0 0 25px #ff007f, inset 0 0 15px #000;
             border-radius: 20px;
-            padding: 20px;
+            padding: 25px;
             display: inline-block;
             margin-bottom: 20px;
         }
@@ -42,23 +42,22 @@
             border: 2px solid #00ffcc;
         }
         .reel {
-            width: 70px;
-            height: 70px;
+            width: 75px;
+            height: 75px;
             background: #111;
             border-radius: 8px;
             font-size: 45px;
-            line-height: 70px;
-            transition: transform 0.5s ease-in-out;
+            line-height: 75px;
         }
         .controls {
-            margin-top: 25px;
+            margin-top: 30px;
         }
         .btn-spin {
             background: linear-gradient(to right, #ff007f, #ff00ab);
             border: none;
             color: white;
-            padding: 15px 40px;
-            font-size: 20px;
+            padding: 15px 50px;
+            font-size: 22px;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
@@ -70,11 +69,11 @@
             transform: scale(0.95);
             box-shadow: 0 0 5px #ff007f;
         }
-        .balance-box {
-            font-size: 18px;
-            margin-top: 10px;
-            color: #ffcc00;
-            text-shadow: 0 0 5px #ffcc00;
+        .info-text {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -84,75 +83,65 @@
     
     <div class="slot-machine">
         <div class="reels">
-            <div id="reel1" class="reel">🍒</div>
-            <div id="reel2" class="reel">🍒</div>
-            <div id="reel3" class="reel">🍒</div>
+            <div id="reel1" class="reel">🎰</div>
+            <div id="reel2" class="reel">🎰</div>
+            <div id="reel3" class="reel">🎰</div>
         </div>
     </div>
 
-    <div class="balance-box">Ставка: <span id="current-bet">100</span> | Монеты: <span id="user-balance">...</span></div>
-
     <div class="controls">
-        <button class="btn-spin" onclick="spin()">Крутить</button>
+        <button class="btn-spin" onclick="startLocalSpin()">Крутить</button>
+    </div>
+
+    <div class="info-text">
+        Добро пожаловать в VIP-зал!<br>
+        Нажмите кнопку выше, чтобы запустить симуляцию автомата.<br>
+        Управление основным балансом и вывод средств доступны в меню чата.
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Раскрываем приложение на весь экран
+        tg.expand(); // Раскрываем на всю высоту экрана телефона
 
-        const symbols = ["🍒", "🍋", "7️⃣", "💎"];
-        const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 12345; // Тестовый ID, если запуск не из ТГ
-        
-        let bet = 100;
+        const symbols = ["🍒", "🍋", "7️⃣", "💎", "🍇", "🔔"];
         let isSpinning = false;
 
-        async function spin() {
+        function startLocalSpin() {
             if (isSpinning) return;
             isSpinning = true;
-            
-            // Запуск эффекта быстрого мигания (имитация кручения барабанов)
+
+            // Имитация кручения анимации
             const interval = setInterval(() => {
-                document.getElementById('reel1').innerText = symbols[Math.floor(random() * symbols.length)];
-                document.getElementById('reel2').innerText = symbols[Math.floor(random() * symbols.length)];
-                document.getElementById('reel3').innerText = symbols[Math.floor(random() * symbols.length)];
-            }, 70);
+                document.getElementById('reel1').innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                document.getElementById('reel2').innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                document.getElementById('reel3').innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            }, 60);
 
-            try {
-                // Отправляем запрос на наш Python бэкенд
-                const response = await fetch('http://ВАШ_IP_СЕРВЕРА:8000/api/spin', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, bet: bet })
-                });
-                
-                const result = await response.json();
-                
-                setTimeout(() => {
-                    clearInterval(interval);
-                    // Устанавливаем итоговые символы, которые прислал бэкенд (с учетом подкрутки 70/30)
-                    document.getElementById('reel1').innerText = symbols[result.symbols[0]];
-                    document.getElementById('reel2').innerText = symbols[result.symbols[1]];
-                    document.getElementById('reel3').innerText = symbols[result.symbols[2]];
-                    
-                    document.getElementById('user-balance').innerText = result.balance;
-                    
-                    if (result.status === "win") {
-                        tg.HapticFeedback.notificationOccurred("success"); // Вибрация телефона при победе
-                        alert(`🔥 ПОБЕДА! Вы выиграли ${result.win_amount} монет!`);
-                    } else {
-                        tg.HapticFeedback.notificationOccurred("error");
-                    }
-                    isSpinning = false;
-                }, 1000); // Тормозим барабаны через 1 секунду
-
-            } catch (error) {
+            // Имитируем подкрутку 70/30 на самом клиенте для визуального эффекта
+            setTimeout(() => {
                 clearInterval(interval);
-                alert("Ошибка соединения с сервером казино");
+                
+                const isWin = Math.random() > 0.70; // 30% шанса на красивую победную комбинацию на экране
+                
+                if (isWin) {
+                    const winSymbol = symbols[Math.floor(Math.random() * 4)]; // Выбираем топовый символ
+                    document.getElementById('reel1').innerText = winSymbol;
+                    document.getElementById('reel2').innerText = winSymbol;
+                    document.getElementById('reel3').innerText = winSymbol;
+                    
+                    tg.HapticFeedback.notificationOccurred("success"); // Телефон премиально вибрирует при победе
+                } else {
+                    // Генерируем разные символы для проигрыша
+                    document.getElementById('reel1').innerText = symbols[0];
+                    document.getElementById('reel2').innerText = symbols[1];
+                    document.getElementById('reel3').innerText = symbols[2];
+                    
+                    tg.HapticFeedback.notificationOccurred("error"); // Легкая вибрация ошибки
+                }
+                
                 isSpinning = false;
-            }
+            }, 1200); // Барабаны крутятся 1.2 секунды
         }
-        
-        function random() { return Math.random(); }
     </script>
 </body>
 </html>
