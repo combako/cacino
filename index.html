@@ -3,163 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server-Driven Crash</title>
+    <title>Casino Royal VIP</title>
     <script src="https://telegram.org"></script>
     <style>
-        :root { --bg: #090a10; --panel: #131522; --accent: #00ff88; --danger: #ff0055; --text: #ffffff; --subtext: #7e84a3; --neon-blue: #00d2ff; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; user-select: none; -webkit-user-select: none; }
-        .header { width: 100%; display: flex; justify-content: space-between; align-items: center; background: var(--panel); padding: 14px; border-radius: 16px; box-sizing: border-box; margin-bottom: 12px; border: 1px solid #20243a; }
-        .balance-value { font-size: 20px; font-weight: 800; color: var(--accent); }
-        .game-container { position: relative; width: 100%; height: 220px; background: radial-gradient(circle at 10% 90%, #15192e 0%, var(--panel) 70%); border-radius: 24px; overflow: hidden; margin-bottom: 8px; border: 1px solid #20243a; }
-        .game-grid { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(to right, rgba(32, 36, 58, 0.3) 1px, transparent 1px), linear-gradient(to top, rgba(32, 36, 58, 0.3) 1px, transparent 1px); background-size: 40px 40px; background-position: bottom left; }
-        .multiplier { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; font-weight: 900; color: #fff; z-index: 10; }
-        .rocket { position: absolute; bottom: 30px; left: 30px; font-size: 40px; z-index: 5; transform: rotate(45deg); filter: drop-shadow(0 0 10px rgba(0,210,255,0.5)); transition: transform 0.1s linear; }
-        .status-text { position: absolute; bottom: 15px; width: 100%; text-align: center; font-size: 13px; color: var(--neon-blue); font-weight: 600; text-transform: uppercase; }
-        .history-container { width: 100%; display: flex; align-items: center; background: rgba(19, 21, 34, 0.6); border: 1px solid #1c1f33; border-radius: 10px; padding: 8px 12px; box-sizing: border-box; margin-bottom: 12px; overflow-x: auto; white-space: nowrap; gap: 8px; }
-        .history-container::-webkit-scrollbar { display: none; }
-        .history-badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: #090a10; border: 1px solid transparent; }
-        .badge-good { color: var(--accent); border-color: rgba(0, 255, 136, 0.2); }
-        .badge-bad { color: var(--danger); border-color: rgba(255, 0, 85, 0.2); }
-        .controls { width: 100%; background: var(--panel); padding: 16px; border-radius: 20px; box-sizing: border-box; border: 1px solid #20243a; margin-bottom: 12px; }
-        input { width: 100%; background: #090a10; border: 1px solid #252942; color: #fff; padding: 14px; border-radius: 12px; font-size: 18px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; }
-        button { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 12px; }
-        .btn-bet { background: linear-gradient(135deg, #00ff88 0%, #00bfff 100%); color: #050f0a; }
-        .btn-bet:disabled { background: #1f2235; color: #4a4f73; }
-        .btn-cashout { background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%); color: #211c00; display: none; }
-        .finance-buttons { display: flex; gap: 12px; width: 100%; margin-bottom: 12px; }
-        .finance-buttons button { margin-top: 0; }
-        .btn-dep { background: #1a1d36; border: 1px solid #2d325a; color: var(--neon-blue); }
+        body {
+            background: radial-gradient(circle, #1a0033 0%, #050014 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+            margin-bottom: 20px;
+        }
+        .slot-machine {
+            background: linear-gradient(145deg, #2a0845, #6441a5);
+            border: 4px solid #ff007f;
+            box-shadow: 0 0 25px #ff007f, inset 0 0 15px #000;
+            border-radius: 20px;
+            padding: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .reels {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: #000;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #00ffcc;
+        }
+        .reel {
+            width: 70px;
+            height: 70px;
+            background: #111;
+            border-radius: 8px;
+            font-size: 45px;
+            line-height: 70px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .controls {
+            margin-top: 25px;
+        }
+        .btn-spin {
+            background: linear-gradient(to right, #ff007f, #ff00ab);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff007f;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+        .btn-spin:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 5px #ff007f;
+        }
+        .balance-box {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #ffcc00;
+            text-shadow: 0 0 5px #ffcc00;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="balance-box"><div>Игровой баланс</div><div><span class="balance-value" id="user-balance">0</span> ⭐️</div></div>
-        <div style="text-align: right;"><div>Игрок</div><div id="username" style="font-weight:600;">Guest</div></div>
+
+    <div class="header">💎 VIP CASINO ROYAL 💎</div>
+    
+    <div class="slot-machine">
+        <div class="reels">
+            <div id="reel1" class="reel">🍒</div>
+            <div id="reel2" class="reel">🍒</div>
+            <div id="reel3" class="reel">🍒</div>
+        </div>
     </div>
-    <div class="game-container">
-        <div class="game-grid"></div>
-        <div class="multiplier" id="multiplier-text">1.00x</div>
-        <div class="rocket" id="rocket">🚀</div>
-        <div class="status-text" id="game-status">Синхронизация...</div>
-    </div>
-    <div class="history-container" id="history-box"><span style="color:var(--subtext); font-size:11px; text-transform:uppercase;">История:</span></div>
+
+    <div class="balance-box">Ставка: <span id="current-bet">100</span> | Монеты: <span id="user-balance">...</span></div>
+
     <div class="controls">
-        <div style="font-size:11px; color:var(--subtext); text-transform:uppercase; margin-bottom:8px; font-weight:600;">Размер вашей ставки (⭐️)</div>
-        <input type="number" id="bet-amount" value="10" step="5" min="1">
-        <button class="btn-bet" id="btn-action" onclick="registerBet()">Вступить в раунд</button>
-        <button class="btn-cashout" id="btn-cashout" onclick="cashOut()">Забрать выигрыш</button>
+        <button class="btn-spin" onclick="spin()">Крутить</button>
     </div>
-    <div class="finance-buttons">
-        <button class="btn-dep" onclick="openDeposit()">📥 Купить Звезды</button>
-    </div>
+
     <script>
-        const tg = window.Telegram?.WebApp;
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Раскрываем приложение на весь экран
+
+        const symbols = ["🍒", "🍋", "7️⃣", "💎"];
+        const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 12345; // Тестовый ID, если запуск не из ТГ
         
-        // 🛑 ВСТАВЬ СВОИ ССЫЛКИ ИЗ PINGGY (ОБЯЗАТЕЛЬНО ДВЕ: ОБЫЧНУЮ И ДЛЯ ВЕБСОКЕТОВ)
-        const BACKEND_URL = "https://ЗАМЕНИ_МЕНЯ.pinggy.link";
-        const WS_URL = "wss://ЗАМЕНИ_МЕНЯ.pinggy.link/ws";
+        let bet = 100;
+        let isSpinning = false;
 
-        let userId = 0, balance = 0, currentBet = 0, inGame = false;
-        const balanceEl = document.getElementById('user-balance'), multEl = document.getElementById('multiplier-text'), rocketEl = document.getElementById('rocket'), statusEl = document.getElementById('game-status'), btnAction = document.getElementById('btn-action'), btnCashout = document.getElementById('btn-cashout'), betInput = document.getElementById('bet-amount'), historyBox = document.getElementById('history-box');
+        async function spin() {
+            if (isSpinning) return;
+            isSpinning = true;
+            
+            // Запуск эффекта быстрого мигания (имитация кручения барабанов)
+            const interval = setInterval(() => {
+                document.getElementById('reel1').innerText = symbols[Math.floor(random() * symbols.length)];
+                document.getElementById('reel2').innerText = symbols[Math.floor(random() * symbols.length)];
+                document.getElementById('reel3').innerText = symbols[Math.floor(random() * symbols.length)];
+            }, 70);
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                userId = tg.initDataUnsafe.user.id;
-                document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
-                loadBalance();
-                connectWebSocket();
-            } else { statusEl.innerText = "⚠️ Ошибка: Открой в ТГ!"; }
-        });
-
-        async function loadBalance() {
-            if (!userId) return;
             try {
-                let res = await fetch(`${BACKEND_URL}/get_balance?user_id=${userId}`);
-                let data = await res.json();
-                balance = data.balance; inGame = data.in_bet; updateUI();
-            } catch(e) { console.log("Нет связи с сервером"); }
-        }
-
-        function updateUI() { balanceEl.innerText = balance; }
-
-        function connectWebSocket() {
-            const socket = new WebSocket(WS_URL);
-            socket.onmessage = function(event) {
-                const data = JSON.parse(event.data);
+                // Отправляем запрос на наш Python бэкенд
+                const response = await fetch('http://ВАШ_IP_СЕРВЕРА:8000/api/spin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, bet: bet })
+                });
                 
-                if (data.type === "sync") {
-                    updateHistory(data.state.history);
-                    handleServerState(data.state);
-                } else if (data.type === "countdown") {
-                    statusEl.innerText = `Взлет через ${data.time}с`;
-                    if (!inGame) { btnAction.style.display = "block"; btnAction.disabled = false; btnAction.innerText = `Поставить (${data.time}с)`; btnCashout.style.display = "none"; }
-                    else { btnAction.style.display = "block"; btnAction.disabled = true; btnAction.innerText = "Ожидание взлета..."; }
-                    rocketEl.style.transform = "translate(0px, 0px) rotate(45deg)";
-                    multEl.innerText = "1.00x"; multEl.style.color = "#fff";
-                } else if (data.type === "fly") {
-                    statusEl.innerText = inGame ? "Вы в игре!" : "Раунд идет...";
-                    multEl.innerText = data.multiplier.toFixed(2) + "x";
-                    let move = (data.multiplier - 1) * 20;
-                    rocketEl.style.transform = `translate(${move * 1.3}px, -${move}px) rotate(45deg)`;
-                    if (inGame) {
-                        btnAction.style.display = "none"; btnCashout.style.display = "block"; btnCashout.disabled = false;
-                        btnCashout.innerText = `ЗАБРАТЬ (+${Math.floor(currentBet * data.multiplier)} ⭐️)`;
-                    } else { btnAction.style.display = "block"; btnAction.disabled = true; btnAction.innerText = "Раунд идет"; }
-                } else if (data.type === "crash") {
-                    inGame = false; currentBet = 0;
-                    btnCashout.style.display = "none"; btnAction.style.display = "block"; btnAction.disabled = true; btnAction.innerText = "Взрыв";
-                    multEl.innerText = "ВЗРЫВ"; multEl.style.color = "var(--danger)";
-                    statusEl.innerText = `Взрыв на ${data.crash_point.toFixed(2)}x`;
-                    updateHistory(data.history);
-                    loadBalance();
-                }
-            };
-            socket.onclose = function() { setTimeout(connectWebSocket, 2000); };
-        }
+                const result = await response.json();
+                
+                setTimeout(() => {
+                    clearInterval(interval);
+                    // Устанавливаем итоговые символы, которые прислал бэкенд (с учетом подкрутки 70/30)
+                    document.getElementById('reel1').innerText = symbols[result.symbols[0]];
+                    document.getElementById('reel2').innerText = symbols[result.symbols[1]];
+                    document.getElementById('reel3').innerText = symbols[result.symbols[2]];
+                    
+                    document.getElementById('user-balance').innerText = result.balance;
+                    
+                    if (result.status === "win") {
+                        tg.HapticFeedback.notificationOccurred("success"); // Вибрация телефона при победе
+                        alert(`🔥 ПОБЕДА! Вы выиграли ${result.win_amount} монет!`);
+                    } else {
+                        tg.HapticFeedback.notificationOccurred("error");
+                    }
+                    isSpinning = false;
+                }, 1000); // Тормозим барабаны через 1 секунду
 
-        function handleServerState(state) {
-            if (state.status == "fly" && inGame) { btnAction.style.display = "none"; btnCashout.style.display = "block"; }
+            } catch (error) {
+                clearInterval(interval);
+                alert("Ошибка соединения с сервером казино");
+                isSpinning = false;
+            }
         }
-
-        async function registerBet() {
-            if (inGame) return;
-            let betVal = parseInt(betInput.value);
-            if (isNaN(betVal) || betVal <= 0 || betVal > balance) { alert("Ошибка ставки!"); return; }
-            try {
-                let res = await fetch(`${BACKEND_URL}/play_crash?user_id=${userId}&bet=${betVal}`, { method: 'POST' });
-                let data = await res.json();
-                if (data.success) { balance = data.new_balance; currentBet = betVal; inGame = true; updateUI(); }
-                else { alert(data.error); }
-            } catch(e) { alert("Сервер недоступен!"); }
-        }
-
-        async function cashOut() {
-            if (!inGame) return;
-            try {
-                let res = await fetch(`${BACKEND_URL}/cashout?user_id=${userId}`, { method: 'POST' });
-                let data = await res.json();
-                if (data.success) { alert(`Выиграно +${data.win} ⭐️!`); balance = data.new_balance; inGame = false; currentBet = 0; updateUI(); btnCashout.disabled = true; }
-                else { alert(data.error); }
-            } catch(e) { alert("Ошибка соединения!"); }
-        }
-
-        async function openDeposit() {
-            const starsStr = prompt("Сколько звёзд купить? (Минимум 10):", "10");
-            if (!starsStr) return;
-            try {
-                let res = await fetch(`${BACKEND_URL}/create_invoice?user_id=${userId}&amount=${parseInt(starsStr)}`);
-                let data = await res.json();
-                if (data.success) { tg.openInvoice(data.invoice_url, function(s) { if(s=='paid') setTimeout(loadBalance, 1500); }); }
-            } catch(e) { alert("Ошибка шлюза!"); }
-        }
-
-        function updateHistory(list) {
-            historyBox.innerHTML = '<span style="color:var(--subtext); font-size:11px; text-transform:uppercase;">История:</span>';
-            list.forEach(val => {
-                const b = document.createElement('span'); b.className = 'history-badge ' + (val >= 2.00 ? 'badge-good' : 'badge-bad'); b.innerText = val.toFixed(2) + 'x';
-                historyBox.appendChild(b);
-            });
-        }
+        
+        function random() { return Math.random(); }
     </script>
 </body>
 </html>
