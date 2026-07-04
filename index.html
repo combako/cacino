@@ -3,100 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Суета Шоп</title>
+    <title>Neon Galaxy Crash</title>
     <script src="https://telegram.org"></script>
     <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body {
-            font-family: Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
+            background-color: #06060c;
+            color: #fff;
             margin: 0;
-            padding: 15px;
-            text-align: center;
-        }
-        .header-box {
-            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .balance-badge {
-            color: #f1c40f;
-            font-size: 18px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .card {
-            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            border-radius: 12px;
-            padding: 15px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid rgba(0,0,0,0.05);
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .icon { font-size: 40px; margin-bottom: 5px; }
-        .name { font-weight: bold; font-size: 14px; }
-        .price { color: #f1c40f; margin: 8px 0; font-weight: bold; }
-        .btn {
-            background-color: var(--tg-theme-button-color, #3498db);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            border-radius: 8px;
-            padding: 8px;
-            cursor: pointer;
+        .casino-box {
+            background: linear-gradient(145deg, #111122, #0a0a14);
+            border: 1px solid #1f1f3a;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 390px;
+            padding: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 40px rgba(0, 230, 118, 0.03);
+        }
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand { font-weight: 900; font-size: 20px; color: #00e676; letter-spacing: 0.5px; }
+        .wallet {
+            background: #14142b;
+            border: 1px solid #2c2c54;
+            padding: 8px 16px;
+            border-radius: 14px;
             font-weight: bold;
+            color: #ffca28;
+            font-size: 15px;
+        }
+        .space-window {
+            position: relative;
+            height: 220px;
+            background: radial-gradient(circle at bottom left, #180f33, #05050a);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid #1b1b35;
+        }
+        .stars-grid {
+            position: absolute;
+            width: 200%; height: 200%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 25px 25px;
+            bottom: 0; left: 0;
+            transform: skewX(-8deg);
+        }
+        .rocket-ship {
+            position: absolute;
+            font-size: 46px;
+            bottom: 15px; left: 15px;
+            transition: all 0.08s linear;
+            transform: rotate(45deg);
+            filter: drop-shadow(0 0 12px #00e676);
+        }
+        .multiplier-num {
+            font-size: 60px;
+            font-weight: 900;
+            text-align: center;
+            margin: 18px 0;
+            color: #00e676;
+            text-shadow: 0 0 25px rgba(0,230,118,0.35);
+        }
+        .status-txt {
+            text-align: center; color: #6a6a8c; font-size: 14px; margin-bottom: 18px; height: 16px; font-weight: 500;
+        }
+        .bet-box {
+            display: flex; background: #0b0b14; border-radius: 16px; border: 1px solid #1f1f3a; padding: 4px; margin-bottom: 18px;
+        }
+        .bet-box input {
+            background: transparent; border: none; color: white; width: 100%; padding: 14px; font-size: 17px; font-weight: bold; outline: none; text-align: center;
+        }
+        .main-btn {
+            background: linear-gradient(135deg, #00e676, #00b0ff);
+            color: #000; border: none; padding: 18px; font-size: 18px; font-weight: 800; border-radius: 16px; width: 100%; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 230, 118, 0.25); transition: all 0.2s ease;
+        }
+        .main-btn:disabled {
+            background: #19192b !important; color: #44445c !important; box-shadow: none !important; cursor: not-allowed;
         }
     </style>
 </head>
 <body>
 
-    <div class="header-box">
-        <div>🔥 ТВОЙ БАЛАНС: <span class="balance-badge" id="user-balance">0</span> ⭐</div>
+    <div class="casino-box">
+        <div class="top-row">
+            <div class="brand">🚀 GALAXY CRASH</div>
+            <div class="wallet">💎 <span id="user-bal">0.00</span></div>
+        </div>
+
+        <div class="space-window">
+            <div class="stars-grid"></div>
+            <div class="rocket-ship" id="rocket-ship">🚀</div>
+        </div>
+
+        <div class="multiplier-num" id="mult-num">x1.00</div>
+        <div class="status-txt" id="game-status">Загрузка космических систем...</div>
+
+        <div class="bet-box">
+            <input type="number" id="bet-field" value="10" min="1">
+        </div>
+
+        <button class="main-btn" id="core-btn" onclick="triggerAction()">ПОСТАВИТЬ СТАВКУ</button>
     </div>
-    
-    <div class="grid" id="catalog"></div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Достаем баланс из URL параметров
-        const urlParams = new URLSearchParams(window.location.search);
-        const userBalance = urlParams.get('balance') || 0;
-        document.getElementById('user-balance').innerText = userBalance;
+        // Берем ID юзера из ТГ или создаем временный для тестов в браузере
+        const myUid = tg.initDataUnsafe?.user?.id || Math.floor(100000 + Math.random() * 900000);
+        
+        const proto = window.location.protocol === "https:" ? "wss://" : "ws://";
+        const socket = new WebSocket(`${proto}${window.location.host}/ws/${myUid}`);
 
-        const cfg = {
-            "heart": {"name": "Сердечко", "emoji": "❤️", "price": 16},
-            "bear": {"name": "Мишка", "emoji": "🧸", "price": 16},
-            "box": {"name": "Бокс с баблом", "emoji": "🎁", "price": 26},
-            "rose": {"name": "Роза от Мелла", "emoji": "🌹", "price": 26},
-            "cake": {"name": "Элитный торт", "emoji": "🎂", "price": 51},
-            "rocket": {"name": "Ракета", "emoji": "🚀", "price": 51}
+        const ship = document.getElementById("rocket-ship");
+        const multNum = document.getElementById("mult-num");
+        const statusTxt = document.getElementById("game-status");
+        const actionBtn = document.getElementById("core-btn");
+        const balLabel = document.getElementById("user-bal");
+        const betField = document.getElementById("bet-field");
+
+        let stateNow = "waiting";
+        let currentMult = 1.0;
+        let playStatus = false;
+
+        socket.onmessage = function(event) {
+            const serverData = JSON.parse(event.data);
+            
+            balLabel.innerText = serverData.balance.toFixed(2);
+            stateNow = serverData.status;
+            currentMult = serverData.multiplier;
+            playStatus = serverData.in_game;
+
+            if (serverData.status === "waiting") {
+                statusTxt.innerText = `Взлет через: ${serverData.timer} сек`;
+                multNum.innerText = "x1.00";
+                multNum.style.color = "#00e676";
+                multNum.style.textShadow = "0 0 25px rgba(0,230,118,0.35)";
+                ship.style.display = "block";
+                ship.style.bottom = "15px"; ship.style.left = "15px";
+                
+                betField.disabled = false;
+                if (playStatus) {
+                    actionBtn.disabled = true;
+                    actionBtn.innerText = "СТАВКА В ИГРЕ";
+                } else {
+                    actionBtn.disabled = false;
+                    actionBtn.innerText = "ПОСТАВИТЬ СТАВКУ";
+                    actionBtn.style.background = "linear-gradient(135deg, #00e676, #00b0ff)";
+                }
+            } 
+            else if (serverData.status === "flying") {
+                statusTxt.innerText = "Полет идет нормально! Успей забрать фишки.";
+                multNum.innerText = "x" + serverData.multiplier.toFixed(2);
+                
+                let flightShift = Math.min(150, (serverData.multiplier - 1) * 30);
+                ship.style.bottom = (15 + flightShift) + "px";
+                ship.style.left = (15 + flightShift) + "px";
+                
+                betField.disabled = true;
+                if (playStatus) {
+                    actionBtn.disabled = false;
+                    actionBtn.innerText = `ЗАБРАТЬ ${(betField.value * serverData.multiplier).toFixed(1)} 💎`;
+                    actionBtn.style.background = "linear-gradient(135deg, #ffca28, #ff8f00)";
+                } else {
+                    actionBtn.disabled = true;
+                    actionBtn.innerText = "ЖДЕМ СЛЕДУЮЩИЙ РАУНД";
+                }
+            } 
+            else if (serverData.status === "crashed") {
+                statusTxt.innerText = "РАКЕТА ПОТЕРПЕЛА КРУШЕНИЕ!";
+                multNum.innerText = "КРАШ";
+                multNum.style.color = "#ff5252";
+                multNum.style.textShadow = "0 0 25px rgba(255,82,82,0.5)";
+                ship.style.display = "none";
+                actionBtn.disabled = true;
+                actionBtn.innerText = "ВЗРЫВ";
+            }
         };
 
-        const catalog = document.getElementById('catalog');
-
-        Object.keys(cfg).forEach(key => {
-            const item = cfg[key];
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="icon">${item.emoji}</div>
-                <div class="name">${item.name}</div>
-                <div class="price">${item.price} ⭐</div>
-                <button class="btn" onclick="buyItem('${key}')">Купить</button>
-            `;
-            catalog.appendChild(card);
-        });
-
-        function buyItem(key) {
-            tg.sendData(key); // Отправляем ID товара в бот
-            tg.close();       // Закрываем веб-апп, чтобы открылся инвойс
+        function triggerAction() {
+            if (stateNow === "waiting" && !playStatus) {
+                socket.send(JSON.stringify({
+                    action: "place_bet",
+                    amount: betField.value
+                }));
+            } else if (stateNow === "flying" && playStatus) {
+                socket.send(JSON.stringify({ action: "cash_out" }));
+            }
         }
     </script>
 </body>
