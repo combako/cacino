@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fragment — Buy and Sell Usernames</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -36,10 +36,10 @@
 
     .navbar .logo {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 800;
       color: #ffffff;
       cursor: pointer;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.5px;
     }
 
     .navbar .nav-links {
@@ -97,18 +97,55 @@
     .page-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 24px;
     }
-    .page-header h1 {
-      font-size: 22px;
+    .page-header .left h1 {
+      font-size: 24px;
       font-weight: 700;
       color: #fff;
     }
-    .page-header .sub {
+    .page-header .left .sub {
       color: #6b7688;
       font-size: 14px;
-      margin-top: 2px;
+      margin-top: 4px;
+    }
+    .page-header .left .sub a {
+      color: #4a7cf7;
+      text-decoration: none;
+    }
+    .page-header .left .sub a:hover {
+      text-decoration: underline;
+    }
+
+    .page-header .right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-sell {
+      background: transparent;
+      border: 1px solid #2d333b;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e0e6ed;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-sell:hover {
+      background: #1a1f26;
+      border-color: #4a7cf7;
+      color: #fff;
+    }
+    .btn-sell:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     /* ===== ТАБЛИЦА ===== */
@@ -181,36 +218,10 @@
       color: #6b7688;
     }
 
-    /* ===== КНОПКА SELL (В ПРАВОМ ВЕРХНЕМ УГЛУ) ===== */
-    .table-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .btn-sell {
-      background: transparent;
-      border: 1px solid #2d333b;
-      padding: 8px 20px;
-      border-radius: 40px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #e0e6ed;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-sell:hover {
-      background: #1a1f26;
-      border-color: #4a7cf7;
-      color: #fff;
-    }
-
-    .btn-sell:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    .table-wrap .stars {
+      color: #f0b90b;
+      font-size: 13px;
+      letter-spacing: 2px;
     }
 
     /* ===== СТАТУС-БОКС ===== */
@@ -290,11 +301,13 @@
 <div class="main">
 
   <div class="page-header">
-    <div>
+    <div class="left">
       <h1>Usernames</h1>
-      <div class="sub">Buy and sell Telegram usernames</div>
+      <div class="sub">
+        Buy and sell Telegram usernames · <a href="#">How it works</a>
+      </div>
     </div>
-    <div class="table-actions">
+    <div class="right">
       <button class="btn-sell" id="sellBtn">✏️ Sell</button>
     </div>
   </div>
@@ -315,61 +328,91 @@
           <td class="username">board.t.me</td>
           <td><span class="price">24,740</span><span class="usd">~ $34,275</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">feds.t.me</td>
           <td><span class="price">23,665</span><span class="usd">~ $32,785</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">firexi.t.me</td>
           <td><span class="price">11,667</span><span class="usd">~ $16,163</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">blackhat.t.me</td>
           <td><span class="price">10,001</span><span class="usd">~ $13,855</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">police.t.me</td>
           <td><span class="price">9,333</span><span class="usd">~ $12,930</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">gramv.t.me</td>
           <td><span class="price">8,023</span><span class="usd">~ $11,115</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">cryptoapp.t.me</td>
           <td><span class="price">8,009</span><span class="usd">~ $11,096</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">joel.t.me</td>
           <td><span class="price">6,046</span><span class="usd">~ $8,376</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">sixi.t.me</td>
           <td><span class="price">6,025</span><span class="usd">~ $8,347</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
         <tr>
           <td class="username">each.t.me</td>
           <td><span class="price">6,021</span><span class="usd">~ $8,341</span></td>
           <td class="left">left</td>
-          <td class="status">Will close soon</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
+        </tr>
+        <tr>
+          <td class="username">sbgj.t.me</td>
+          <td><span class="price">5,996</span><span class="usd">~ $8,307</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
+        </tr>
+        <tr>
+          <td class="username">slgj.t.me</td>
+          <td><span class="price">5,994</span><span class="usd">~ $8,304</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
+        </tr>
+        <tr>
+          <td class="username">slyl.t.me</td>
+          <td><span class="price">5,994</span><span class="usd">~ $8,304</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
+        </tr>
+        <tr>
+          <td class="username">slyz.t.me</td>
+          <td><span class="price">5,994</span><span class="usd">~ $8,304</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
+        </tr>
+        <tr>
+          <td class="username">bmsw.t.me</td>
+          <td><span class="price">5,990</span><span class="usd">~ $8,299</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="stars">⭐⭐⭐</span> Will close soon</td>
         </tr>
       </tbody>
     </table>
